@@ -1,0 +1,131 @@
+[
+    {
+        "id": 1,
+        "name": "Harald",
+        "skills": [
+            "KSDJCA4E89LB98JAZ7LZ",
+            "KS120076FGP5WGWYMP0F",
+            "KS126X96GY4ZNCW5K7BM",
+            "KS127ZG6DBSF76WF7VYX",
+            "KS1200771D9CR9LB4MWW"
+        ],
+        "company": "company-1"
+    },
+    {
+        "id": 2,
+        "name": "Fredrik",
+        "skills": [
+            "ES6D557B9D5BE598FD74",
+            "KS120076FGP5WGWYMP0F",
+            "KS1200771D9CR9LB4MWW",
+            "KS440W865GC4VRBW6LJP",
+            "KS126X96GY4ZNCW5K7BM"
+        ],
+        "company": "company-1"
+    },
+    {
+        "id": 3,
+        "name": "Charlotte",
+        "skills": [
+            "ES6D557B9D5BE598FD74",
+            "KS120076FGP5WGWYMP0F",
+            "KS1200771D9CR9LB4MWW",
+            "KS126X96GY4ZNCW5K7BM",
+            "ES5269FD2583B0B9875C",
+            "KSDJCA4E89LB98JAZ7LZ"
+        ],
+        "company": "company-1"
+    },
+    {
+        "id": 4,
+        "name": "Simon",
+        "skills": [
+            "KS127ZG6DBSF76WF7VYX",
+            "ES5269FD2583B0B9875C",
+            "KS1200365FTR9X0M96T9"
+        ],
+        "company": "company-1"
+    },
+    {
+        "id": "company-1",
+        "name": "Auge Technologies",
+        "roles": [
+            "role1",
+            "role2",
+            "role3",
+            "role4"
+        ]
+    },
+    {
+        "id": "role1",
+        "name": "GeneralTech-person",
+        "skills": [
+            "ES6D557B9D5BE598FD74",
+            "KS120076FGP5WGWYMP0F",
+            "KS1200771D9CR9LB4MWW",
+            "KSDJCA4E89LB98JAZ7LZ"
+        ]
+    },
+    {
+        "id": "role2",
+        "name": "Visualizer",
+        "skills": [
+            "KS127ZG6DBSF76WF7VYX",
+            "ES5269FD2583B0B9875C"
+        ]
+    },
+    {
+        "id": "role3",
+        "name": "Backend-worker",
+        "skills": [
+            "ES6D557B9D5BE598FD74",
+            "KS440W865GC4VRBW6LJP",
+            "KS126X96GY4ZNCW5K7BM"
+        ]
+    },
+    {
+        "id": "role4",
+        "name": "Frontend-worker",
+        "skills": [
+            "KSDJCA4E89LB98JAZ7LZ",
+            "ES5269FD2583B0B9875C",
+            "KS1200771D9CR9LB4MWW"
+        ]
+    },
+    {
+        "id": "ES6D557B9D5BE598FD74",
+        "name": "Spring Boot"
+    },
+    {
+        "id": "KS120076FGP5WGWYMP0F",
+        "name": "Java (programming janguage)"
+    },
+    {
+        "id": "KS1200771D9CR9LB4MWW",
+        "name": "JavaScript (programming language)"
+    },
+    {
+        "id": "KS126X96GY4ZNCW5K7BM",
+        "name": "Neo4j"
+    },
+    {
+        "id": "KSDJCA4E89LB98JAZ7LZ",
+        "name": "React.js (Javascript Library)"
+    },
+    {
+        "id": "KS440W865GC4VRBW6LJP",
+        "name": "SQL"
+    },
+    {
+        "id": "ES5269FD2583B0B9875C",
+        "name": "Figma (Design software)"
+    },
+    {
+        "id": "KS127ZG6DBSF76WF7VYX",
+        "name": "Microsoft PowerPoint"
+    },
+    {
+        "id": "KS1200365FTR9X0M96T9",
+        "name": "Microsoft Word"
+    }
+]
