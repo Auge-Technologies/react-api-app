@@ -52,7 +52,6 @@ const Skill_search = () => {
 		try {
 			const response = await axios(options);
 			const searchedSkillsData = response.data.data || [];
-			console.log(searchedSkillsData);
 			setSkillObjects(searchedSkillsData);
 			const searchedSkills = searchedSkillsData.map((skill) => skill.name);
 			setSearchedSkills(searchedSkills);
@@ -63,10 +62,6 @@ const Skill_search = () => {
 
 
 	};
-
-	useEffect(() => {
-    console.log(skillObjects);
-  }, [skillObjects]);
 	
 	
   const handleSearch = (searchQuery) => {

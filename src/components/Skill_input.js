@@ -39,9 +39,6 @@ const Skill_input = () => {
 		}
 	};
 	
-	useEffect(() => {
-		getRelatedSkills();
-	}, [knownSkills]);
 
   const getRelatedSkills = async () => {
 		try {
@@ -73,6 +70,10 @@ const Skill_input = () => {
   useEffect(() => {
     console.log(relatedSkills);
   }, [relatedSkills]);
+
+  useEffect(() =>{
+    findKnownSkills();
+  },[selectedEmployee])
 
   const handleEmployeeChange = (e) => {
     setSelectedEmployee(e.target.value);
@@ -151,7 +152,7 @@ const Skill_input = () => {
         <br />
       </div>
 
-      <button onClick={findKnownSkills}>Give me similar skills to what I know</button>
+      <button onClick={getRelatedSkills}>Give me similar skills to what I know</button>
 
       <h2>You know:</h2>
       <ul>
