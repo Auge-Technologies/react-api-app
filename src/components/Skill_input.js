@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import json from "../data/skills.json";
 import axios from "axios";
 import qs from "qs";
 
@@ -8,7 +7,6 @@ const Skill_input = () => {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [knownSkills, setKnownSkills] = useState([]);
   const [expandedSkills, setExpandedSkills] = useState([]);
-  const [expandedIndex, setExpandedIndex] = useState();
   const [isExpanded, setIsExpanded] = useState([]);
   const [employees, setEmployees] = useState([]);
 
@@ -33,26 +31,10 @@ const Skill_input = () => {
     }
   };
 
-  // const findKnownSkills = () => {
-  //   const selectedEmployeeObj = json.find(
-  //     (employee) => employee.name === selectedEmployee
-  //   );
-
-  //   if (selectedEmployeeObj) {
-  //     const skills = selectedEmployeeObj.skills || [];
-  //     const knownSkillObjects = json.filter((item) => skills.includes(item.id));
-  //     setKnownSkills(knownSkillObjects);
-  //   } else {
-  //     setKnownSkills([]);
-  //   }
-  // };
-
   const FindEmployees = async () => {
     try {
       const response = await axios.get(`http://localhost:8080/employees/1`); // Replace with your actual Spring Boot endpoint
-
       const employees = response.data;
-
       setEmployees(employees);
     } catch (error) {
       console.error(error);
@@ -60,14 +42,12 @@ const Skill_input = () => {
   };
 
   const findKnownSkills = async () => {
-    console.log(selectedEmployee);
     try {
       const response = await axios.get(
         `http://localhost:8080/employee/skills/${selectedEmployee}`
       ); // Replace with your actual Spring Boot endpoint
 
       const skills = response.data;
-      console.log(skills.length);
 
       const uniqueSkills = skills.reduce((acc, skill) => {
         if (!acc.find((item) => item.name === skill.name)) {
@@ -102,7 +82,6 @@ const Skill_input = () => {
         );
 
         const relatedSkillsData = response.data.data || [];
-        const relatedSkills = relatedSkillsData.map((skill) => skill.name);
         setSkills(relatedSkillsData);
       }
     } catch (error) {
@@ -111,20 +90,7 @@ const Skill_input = () => {
   };
 
   useEffect(() => {
-    console.log(relatedSkills);
-  }, [relatedSkills]);
-
-  useEffect(() => {
-    console.log(employees);
-  }, [employees]);
-
-  useEffect(() => {
-    console.log(expandedSkills);
-  }, [expandedSkills]);
-
-  useEffect(() => {
     findKnownSkills();
-    console.log(selectedEmployee);
   }, [selectedEmployee]);
 
   const handleEmployeeChange = (e) => {
