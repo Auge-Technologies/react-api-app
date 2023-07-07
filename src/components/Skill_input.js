@@ -10,6 +10,7 @@ const Skill_input = () => {
   const [expandedSkills, setExpandedSkills] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState();
   const [isExpanded, setIsExpanded] = useState([]);
+  const [employees, setEmployees] = useState([]);
 
   const getAccessToken = async () => {
     const authData = {
@@ -46,27 +47,36 @@ const Skill_input = () => {
   //   }
   // };
 
+  const FindEmployees = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/employees/1`); // Replace with your actual Spring Boot endpoint
+
+      const employees = response.data;
+
+      setEmployees(employees);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const findKnownSkills = async () => {
+    console.log(selectedEmployee);
     try {
       const response = await axios.get(
-        "http://localhost:8080/employee/skills/1"
+        `http://localhost:8080/employee/skills/${selectedEmployee}`
       ); // Replace with your actual Spring Boot endpoint
+
       const skills = response.data;
-      console.log(skills);
+      console.log(skills.length);
 
-      const selectedEmployeeObj = skills.find(
-        (employee) => employee.name === selectedEmployee
-      );
+      const uniqueSkills = skills.reduce((acc, skill) => {
+        if (!acc.find((item) => item.name === skill.name)) {
+          acc.push(skill);
+        }
+        return acc;
+      }, []);
 
-      if (selectedEmployeeObj) {
-        const skills = selectedEmployeeObj.skills || [];
-        const knownSkillObjects = skills.map((skillId) =>
-          skills.find((employee) => employee.id === skillId)
-        );
-        setKnownSkills(knownSkillObjects);
-      } else {
-        setKnownSkills([]);
-      }
+      setKnownSkills(uniqueSkills);
     } catch (error) {
       console.error(error);
     }
@@ -105,19 +115,21 @@ const Skill_input = () => {
   }, [relatedSkills]);
 
   useEffect(() => {
+    console.log(employees);
+  }, [employees]);
+
+  useEffect(() => {
     console.log(expandedSkills);
   }, [expandedSkills]);
 
   useEffect(() => {
     findKnownSkills();
+    console.log(selectedEmployee);
   }, [selectedEmployee]);
-
-  useEffect(() => {
-    console.log(knownSkills);
-  }, [knownSkills]);
 
   const handleEmployeeChange = (e) => {
     setSelectedEmployee(e.target.value);
+    setRelatedSkills([]);
   };
 
   const handleExpand = (index) => {
@@ -132,46 +144,22 @@ const Skill_input = () => {
   return (
     <>
       <div>
-        <label>
-          <input
-            type="radio"
-            value="Harald"
-            checked={selectedEmployee === "Harald"}
-            onChange={handleEmployeeChange}
-          />{" "}
-          Harald
-        </label>{" "}
+        <button onClick={FindEmployees}>Get Employees</button>
         <br />
-        <label>
-          <input
-            type="radio"
-            value="Fredrik"
-            checked={selectedEmployee === "Fredrik"}
-            onChange={handleEmployeeChange}
-          />{" "}
-          Fredrik
-        </label>{" "}
-        <br />
-        <label>
-          <input
-            type="radio"
-            value="Charlotte"
-            checked={selectedEmployee === "Charlotte"}
-            onChange={handleEmployeeChange}
-          />{" "}
-          Charlotte
-        </label>{" "}
-        <br />
-        <label>
-          <input
-            type="radio"
-            value="Simon"
-            checked={selectedEmployee === "Simon"}
-            onChange={handleEmployeeChange}
-          />{" "}
-          Simon
-        </label>{" "}
-        <br />
+        {employees.map((employee) => (
+          <div key={employee.id}>
+            <label>
+              <input
+                type="radio"
+                value={employee.id}
+                checked={selectedEmployee == employee.id}
+                onChange={handleEmployeeChange}
+              />
+              {employee.name}
+            </label>
+            <br />
+          </div>
+        ))}
       </div>
 
       <button onClick={() => getRelatedSkills(knownSkills, setRelatedSkills)}>
