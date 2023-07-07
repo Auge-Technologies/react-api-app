@@ -32,42 +32,45 @@ const Skill_input = () => {
     }
   };
 
-  const findKnownSkills = () => {
-    const selectedEmployeeObj = json.find(
-      (employee) => employee.name === selectedEmployee
-    );
+  // const findKnownSkills = () => {
+  //   const selectedEmployeeObj = json.find(
+  //     (employee) => employee.name === selectedEmployee
+  //   );
 
-    if (selectedEmployeeObj) {
-      const skills = selectedEmployeeObj.skills || [];
-      const knownSkillObjects = json.filter((item) => skills.includes(item.id));
-      setKnownSkills(knownSkillObjects);
-    } else {
-      setKnownSkills([]);
-    }
-  };
-
-  // const findKnownSkills = async () => {
-  //   try {
-  //     const response = await axios.get("/employee/skills/1"); // Replace with your actual Spring Boot endpoint
-  //     const employees = response.data;
-
-  //     const selectedEmployeeObj = employees.find(
-  //       (employee) => employee.name === selectedEmployee
-  //     );
-
-  //     if (selectedEmployeeObj) {
-  //       const skills = selectedEmployeeObj.skills || [];
-  //       const knownSkillObjects = skills.map((skillId) =>
-  //         employees.find((employee) => employee.id === skillId)
-  //       );
-  //       setKnownSkills(knownSkillObjects);
-  //     } else {
-  //       setKnownSkills([]);
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
+  //   if (selectedEmployeeObj) {
+  //     const skills = selectedEmployeeObj.skills || [];
+  //     const knownSkillObjects = json.filter((item) => skills.includes(item.id));
+  //     setKnownSkills(knownSkillObjects);
+  //   } else {
+  //     setKnownSkills([]);
   //   }
   // };
+
+  const findKnownSkills = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/employee/skills/1"
+      ); // Replace with your actual Spring Boot endpoint
+      const skills = response.data;
+      console.log(skills);
+
+      const selectedEmployeeObj = skills.find(
+        (employee) => employee.name === selectedEmployee
+      );
+
+      if (selectedEmployeeObj) {
+        const skills = selectedEmployeeObj.skills || [];
+        const knownSkillObjects = skills.map((skillId) =>
+          skills.find((employee) => employee.id === skillId)
+        );
+        setKnownSkills(knownSkillObjects);
+      } else {
+        setKnownSkills([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const getRelatedSkills = async (skills, setSkills) => {
     console.log(skills);
@@ -108,6 +111,10 @@ const Skill_input = () => {
   useEffect(() => {
     findKnownSkills();
   }, [selectedEmployee]);
+
+  useEffect(() => {
+    console.log(knownSkills);
+  }, [knownSkills]);
 
   const handleEmployeeChange = (e) => {
     setSelectedEmployee(e.target.value);
