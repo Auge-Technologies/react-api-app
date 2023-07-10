@@ -9,38 +9,17 @@ const Skill_input = () => {
   const [expandedSkills, setExpandedSkills] = useState([]);
   const [isExpanded, setIsExpanded] = useState([]);
   const [employees, setEmployees] = useState([]);
-
-  const getAccessToken = async () => {
-    const authData = {
-      client_id: "stq2qi97wjfeyjye",
-      client_secret: "iKDBB7ZI",
-      grant_type: "client_credentials",
-      scope: "emsi_open",
-    };
-
-    try {
-      const response = await axios.post(
-        "https://auth.emsicloud.com/connect/token",
-        qs.stringify(authData)
-      );
-      const accessToken = response.data.access_token;
-      return accessToken;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
-
   const FindEmployees = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/employees/1`); // Replace with your actual Spring Boot endpoint
-      const employees = response.data;
-      setEmployees(employees);
+      const response = await fetch("http://localhost:8080/employees/1");
+      const data = await response.json();
+      setEmployees(data);
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
+/*
   const findKnownSkills = async () => {
     try {
       const response = await axios.get(
@@ -61,10 +40,11 @@ const Skill_input = () => {
       console.error(error);
     }
   };
+*/
 
   const getRelatedSkills = async (skills, setSkills) => {
     console.log(skills);
-    try {
+/*    try {
       const accessToken = await getAccessToken();
 
       if (accessToken && skills.length > 0) {
@@ -86,15 +66,15 @@ const Skill_input = () => {
       }
     } catch (error) {
       console.log(error);
-    }
+    }*/
   };
-
+/*
   useEffect(() => {
     findKnownSkills();
-  }, [selectedEmployee]);
+  }, [selectedEmployee]);*/
 
-  const handleEmployeeChange = (e) => {
-    setSelectedEmployee(e.target.value);
+  const handleEmployeeChange = (e, employeeId) => {
+    setSelectedEmployee(employeeId);
     setRelatedSkills([]);
   };
 
@@ -108,27 +88,25 @@ const Skill_input = () => {
   };
 
   return (
-    <>
       <div>
         <button onClick={FindEmployees}>Get Employees</button>
         <br />
         {employees.map((employee) => (
-          <div key={employee.id}>
-            <label>
-              <input
-                type="radio"
-                value={employee.id}
-                checked={selectedEmployee == employee.id}
-                onChange={handleEmployeeChange}
-              />
-              {employee.name}
-            </label>
-            <br />
-          </div>
+            <div key={employee.id}>
+              <label>
+                <input
+                    type="radio"
+                    value={employee.id}
+                    checked={selectedEmployee === employee.id}
+                    onChange={(e) => handleEmployeeChange(e, employee.id)}
+                />
+                {employee.name}
+              </label>
+              <br />
+            </div>
         ))}
-      </div>
 
-      <button onClick={() => getRelatedSkills(knownSkills, setRelatedSkills)}>
+        <button onClick={() => getRelatedSkills(knownSkills, setRelatedSkills)}>
         Give me similar skills to what I know
       </button>
 
@@ -161,7 +139,7 @@ const Skill_input = () => {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   );
 };
 
