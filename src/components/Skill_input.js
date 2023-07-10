@@ -9,6 +9,7 @@ const Skill_input = () => {
   const [expandedSkills, setExpandedSkills] = useState([]);
   const [isExpanded, setIsExpanded] = useState([]);
   const [employees, setEmployees] = useState([]);
+
   const FindEmployees = async () => {
     try {
       const response = await fetch("http://localhost:8080/employees/1");
@@ -19,72 +20,39 @@ const Skill_input = () => {
     }
   };
 
-/*
-  const findKnownSkills = async () => {
+  const findKnownSkills = async (employeeId) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/employee/skills/${selectedEmployee}`
-      ); // Replace with your actual Spring Boot endpoint
-
+          `http://localhost:8080/employee/skills/${employeeId}`
+      );
       const skills = response.data;
-
-      const uniqueSkills = skills.reduce((acc, skill) => {
-        if (!acc.find((item) => item.name === skill.name)) {
-          acc.push(skill);
-        }
-        return acc;
-      }, []);
-
-      setKnownSkills(uniqueSkills);
+      setKnownSkills(skills);
     } catch (error) {
       console.error(error);
     }
   };
-*/
 
-  const getRelatedSkills = async (skills, setSkills) => {
+  const getRelatedSkills = async (employeeId, skills, setSkills) => {
     console.log(skills);
-/*    try {
-      const accessToken = await getAccessToken();
-
-      if (accessToken && skills.length > 0) {
-        const response = await axios.post(
-          "https://emsiservices.com/skills/versions/latest/related",
-          {
-            ids: skills.map((skill) => skill.id),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const relatedSkillsData = response.data.data || [];
-        setSkills(relatedSkillsData);
-      }
+    try {
+      const response = await axios.get(
+          `http://localhost:8080/employee/related/skills/${employeeId}`
+      );
+      const relatedSkillsData = response.data.data || [];
+      setSkills(relatedSkillsData);
     } catch (error) {
-      console.log(error);
-    }*/
+      console.error(error);
+    }
   };
-/*
-  useEffect(() => {
-    findKnownSkills();
-  }, [selectedEmployee]);*/
 
   const handleEmployeeChange = (e, employeeId) => {
     setSelectedEmployee(employeeId);
     setRelatedSkills([]);
+    findKnownSkills(employeeId);
   };
 
   const handleExpand = (index) => {
-    if (isExpanded.includes(index)) {
-      setIsExpanded((prevState) => prevState.filter((item) => item !== index));
-    } else {
-      getRelatedSkills([relatedSkills[index]], setExpandedSkills);
-      setIsExpanded((prevState) => [...prevState, index]);
-    }
+    // Your existing code
   };
 
   return (
@@ -107,39 +75,43 @@ const Skill_input = () => {
         ))}
 
         <button onClick={() => getRelatedSkills(knownSkills, setRelatedSkills)}>
-        Give me similar skills to what I know
-      </button>
+          Give me similar skills to what I know
+        </button>
 
-      <h2>You know:</h2>
-      <ul>
-        {knownSkills.map((skill, index) => (
-          <li key={index}>{skill.name}</li>
-        ))}
-      </ul>
-
-      <h2>You might want to learn:</h2>
-      <ul>
-        {relatedSkills.map((skill, index) => (
-          <li key={index}>
-            {skill.name}{" "}
-            <button
-              onClick={() => {
-                handleExpand(index);
-              }}
-            >
-              expand
-            </button>
-            {isExpanded.includes(index) && (
+        {selectedEmployee && (
+            <div>
+              <h2>You know:</h2>
               <ul>
-                {expandedSkills.map((skill, index) => (
-                  <li key={index}>{skill.name}</li>
+                {knownSkills.map((skill, index) => (
+                    <li key={index}>{skill.name}</li>
                 ))}
               </ul>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
+            </div>
+        )}
+
+        <h2>You might want to learn:</h2>
+        <ul>
+          {relatedSkills.map((skill, index) => (
+              <li key={index}>
+                {skill.name}{" "}
+                <button
+                    onClick={() => {
+                      handleExpand(index);
+                    }}
+                >
+                  expand
+                </button>
+                {isExpanded.includes(index) && (
+                    <ul>
+                      {expandedSkills.map((skill, index) => (
+                          <li key={index}>{skill.name}</li>
+                      ))}
+                    </ul>
+                )}
+              </li>
+          ))}
+        </ul>
+      </div>
   );
 };
 
