@@ -4,7 +4,6 @@ import qs from "qs";
 
 const Skill_input = (props) => {
   const [relatedSkills, setRelatedSkills] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [knownSkills, setKnownSkills] = useState([]);
   const [expandedSkills, setExpandedSkills] = useState([]);
   const [isExpanded, setIsExpanded] = useState([]);
@@ -102,11 +101,6 @@ const Skill_input = (props) => {
   useEffect(() => {
     FindEmployees();
   }, []);
-
-  const handleEmployeeChange = (e) => {
-    setSelectedEmployee(e.target.value);
-    setRelatedSkills([]);
-  };
 
   const handleExpand = (index) => {
     if (isExpanded.includes(index)) {
