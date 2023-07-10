@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import qs from "qs";
 
-const Skill_input = () => {
+const Skill_input = (props) => {
   const [relatedSkills, setRelatedSkills] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [knownSkills, setKnownSkills] = useState([]);
   const [expandedSkills, setExpandedSkills] = useState([]);
   const [isExpanded, setIsExpanded] = useState([]);
-  const [employees, setEmployees] = useState([]);
+  const [employee, setEmployee] = useState([]);
 
   const getAccessToken = async () => {
     const authData = {
@@ -33,9 +33,12 @@ const Skill_input = () => {
 
   const FindEmployees = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/employees/1`); // Replace with your actual Spring Boot endpoint
-      const employees = response.data;
-      setEmployees(employees);
+      console.log(props.name);
+      const response = await axios.get(`http://localhost:8080/employees/1`);
+      const employee = response.data.filter(
+        (employee) => employee.name === props.name
+      );
+      setEmployee(employee);
     } catch (error) {
       console.error(error);
     }
@@ -43,8 +46,11 @@ const Skill_input = () => {
 
   const findKnownSkills = async () => {
     try {
+      const id = employee.map((a) => a.id);
+      console.log(employee);
+      console.log(id);
       const response = await axios.get(
-        `http://localhost:8080/employee/skills/${selectedEmployee}`
+        `http://localhost:8080/employee/skills/${id}`
       ); // Replace with your actual Spring Boot endpoint
 
       const skills = response.data;
@@ -91,7 +97,11 @@ const Skill_input = () => {
 
   useEffect(() => {
     findKnownSkills();
-  }, [selectedEmployee]);
+  }, [employee]);
+
+  useEffect(() => {
+    FindEmployees();
+  }, []);
 
   const handleEmployeeChange = (e) => {
     setSelectedEmployee(e.target.value);
@@ -109,35 +119,16 @@ const Skill_input = () => {
 
   return (
     <>
-      <div>
-        <button onClick={FindEmployees}>Get Employees</button>
-        <br />
-        {employees.map((employee) => (
-          <div key={employee.id}>
-            <label>
-              <input
-                type="radio"
-                value={employee.id}
-                checked={selectedEmployee == employee.id}
-                onChange={handleEmployeeChange}
-              />
-              {employee.name}
-            </label>
-            <br />
-          </div>
-        ))}
-      </div>
-
-      <button onClick={() => getRelatedSkills(knownSkills, setRelatedSkills)}>
-        Give me similar skills to what I know
-      </button>
-
       <h2>You know:</h2>
       <ul>
         {knownSkills.map((skill, index) => (
           <li key={index}>{skill.name}</li>
         ))}
       </ul>
+
+      <button onClick={() => getRelatedSkills(knownSkills, setRelatedSkills)}>
+        Give me similar skills to what I know
+      </button>
 
       <h2>You might want to learn:</h2>
       <ul>
