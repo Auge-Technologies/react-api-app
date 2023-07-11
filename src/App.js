@@ -1,8 +1,9 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
-import About from './views/About';
+import Admin from './views/Admin';
 import Home from './views/Home';
+import Dashboard from "./views/Dashboard";
+import Profile from "./views/Profile";
 
 function App() {
     return (
@@ -11,14 +12,16 @@ function App() {
                 {/*<ul>
                      ...your existing navigation links...
                     <li>
-                        <Link to="/about">About</Link>
+                        <Link to="/about">Admin</Link>
                     </li>
                 </ul>*/}
 
                 {/* Define the routes */}
                 <Routes>
                     {<Route path="/login" element={<Home />} />}
-                    <Route path="/" element={<About />} />
+                    <Route path="/" element={<Admin />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/profile" element={<Profile />} />
                 </Routes>
             </div>
         </Router>

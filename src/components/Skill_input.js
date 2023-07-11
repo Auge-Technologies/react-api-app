@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import qs from "qs";
 
-const Skill_input = () => {
+const SkillInputContainer = () => {
+  const [employeeId, setEmployeeId] = useState(null);
   const [relatedSkills, setRelatedSkills] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [knownSkills, setKnownSkills] = useState([]);
   const [expandedSkills, setExpandedSkills] = useState([]);
   const [isExpanded, setIsExpanded] = useState([]);
   const [employees, setEmployees] = useState([]);
 
-  const FindEmployees = async () => {
+  const findEmployees = async () => {
     try {
       const response = await fetch("http://localhost:8080/employees/1");
       const data = await response.json();
@@ -21,6 +21,7 @@ const Skill_input = () => {
   };
 
   const findKnownSkills = async (employeeId) => {
+    console.log(employeeId);
     try {
       const response = await axios.get(
           `http://localhost:8080/employee/skills/${employeeId}`
@@ -32,21 +33,21 @@ const Skill_input = () => {
     }
   };
 
-  const getRelatedSkills = async (employeeId, skills, setSkills) => {
-    console.log(skills);
+  const getRelatedSkills = async () => {
+    console.log(employeeId);
     try {
       const response = await axios.get(
           `http://localhost:8080/employee/related/skills/${employeeId}`
       );
       const relatedSkillsData = response.data.data || [];
-      setSkills(relatedSkillsData);
+      setRelatedSkills(relatedSkillsData);
     } catch (error) {
       console.error(error);
     }
   };
 
   const handleEmployeeChange = (e, employeeId) => {
-    setSelectedEmployee(employeeId);
+    setEmployeeId(employeeId);
     setRelatedSkills([]);
     findKnownSkills(employeeId);
   };
@@ -57,7 +58,7 @@ const Skill_input = () => {
 
   return (
       <div>
-        <button onClick={FindEmployees}>Get Employees</button>
+        <button onClick={findEmployees}>Get Employees</button>
         <br />
         {employees.map((employee) => (
             <div key={employee.id}>
@@ -65,7 +66,7 @@ const Skill_input = () => {
                 <input
                     type="radio"
                     value={employee.id}
-                    checked={selectedEmployee === employee.id}
+                    checked={employeeId === employee.id}
                     onChange={(e) => handleEmployeeChange(e, employee.id)}
                 />
                 {employee.name}
@@ -74,11 +75,11 @@ const Skill_input = () => {
             </div>
         ))}
 
-        <button onClick={() => getRelatedSkills(knownSkills, setRelatedSkills)}>
+        <button onClick={getRelatedSkills}>
           Give me similar skills to what I know
         </button>
 
-        {selectedEmployee && (
+        {employeeId && (
             <div>
               <h2>You know:</h2>
               <ul>
@@ -115,4 +116,4 @@ const Skill_input = () => {
   );
 };
 
-export default Skill_input;
+export default SkillInputContainer;
