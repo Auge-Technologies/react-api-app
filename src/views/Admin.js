@@ -3,7 +3,7 @@ import Skill_input from '../components/Skill_input';
 import Skill_search from '../components/Skill_search';
 import {useAuth0} from "@auth0/auth0-react";
 
-const About = () => {
+const Admin = () => {
     const { logout } = useAuth0();
 
     const handleLogoutClick = () => {
@@ -12,7 +12,7 @@ const About = () => {
 
     return (
         <div>
-            <h1>About Page</h1>
+            <h1>Admin Page</h1>
             <Skill_input/>
             <Skill_search/>
             <button onClick={handleLogoutClick}>logout</button>
@@ -20,4 +20,4 @@ const About = () => {
     );
 };
 
-export default About;
+export default Admin;
