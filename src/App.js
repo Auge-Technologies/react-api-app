@@ -18,10 +18,10 @@ function App() {
 
         {/* Define the routes */}
         <Routes>
-          {<Route path="/login" element={<Home />} />}
-          <Route path="/Admin" element={<Admin />} />
+          {<Route path="/" element={<Home />} />}
+          <Route path="/admin" element={<Admin />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </Router>
