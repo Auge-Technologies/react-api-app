@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import qs from "qs";
 
-const Skill_search = () => {
+const Search_skills = (props) => {
   const [searchedSkills, setSearchedSkills] = useState([]);
   const [skillObjects, setSkillObjects] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const getAccessToken = async () => {
     const authData = {
-      client_id: "pz7sdkr9vczd2llx",
-      client_secret: "9NEkJ8Su",
+      client_id: "uj7mks4c41f42frd",
+      client_secret: "eBcoBJoG",
       grant_type: "client_credentials",
       scope: "emsi_open",
     };
@@ -41,7 +41,7 @@ const Skill_search = () => {
         q: searchQuery,
         typeIds: "ST1,ST2",
         fields: "id,name,type,infoUrl",
-        limit: "5",
+        limit: "10",
       },
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -68,8 +68,29 @@ const Skill_search = () => {
     setSearchQuery(event.target.value);
   };
 
-  const handleKnowSkill = (selectedSkill) => {
-    //legge til skill inder known skills i databse
+  const handleKnowSkill = async (skillObject) => {
+    //   try {
+    //     const employee = props.user;
+    //     console.log(employee);
+    //     const id = 1;
+    //     console.log(id);
+    //     // Create an object representing the known skill
+    //     const knownSkill = {
+    //       id: skillObject.id,
+    //       name: skillObject.name,
+    //       // Add more properties as needed
+    //     };
+    //     console.log(knownSkill);
+    //     // Make a POST request to add the known skill to the user
+    //     const response = await axios.post(
+    //       `http://localhost:8080/employee/addSkill/${id}`,
+    //       knownSkill
+    //     ); // Replace with your actual Spring Boot endpoint
+    //     console.log(response.data); // The response from the server after adding the known skill
+    //     // Call the findKnownSkills function to update the known skills list
+    //   } catch (error) {
+    //     console.error(error);
+    //   }
   };
 
   return (
@@ -96,4 +117,4 @@ const Skill_search = () => {
   );
 };
 
-export default Skill_search;
+export default Search_skills;
