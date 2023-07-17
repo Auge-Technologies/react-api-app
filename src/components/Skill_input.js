@@ -53,7 +53,12 @@ const SkillInputContainer = () => {
   };
 
   const handleExpand = (index) => {
-    // Your existing code
+    if (isExpanded.includes(index)) {
+      setIsExpanded((prevState) => prevState.filter((item) => item !== index));
+    } else {
+      getRelatedSkills([relatedSkills[index]], setExpandedSkills);
+      setIsExpanded((prevState) => [...prevState, index]);
+    }
   };
 
   return (
