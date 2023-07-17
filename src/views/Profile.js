@@ -19,7 +19,6 @@ const Profile = () => {
           <h1>{user.given_name}</h1>
         </div>
       )}
-      <h2>About Page</h2>
       <Skill_input name={user.given_name || "ano"} />
       <Skill_search />
       <My_roles />
