@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Skill_input from "../components/Skill_input";
 import Skill_search from "../components/Skill_search";
+import My_roles from "../components/My_roles";
 import { useAuth0, Auth0Provider } from "@auth0/auth0-react";
 
 const About = () => {
@@ -21,6 +22,7 @@ const About = () => {
       <h2>About Page</h2>
       <Skill_input name={user.given_name || "ano"} />
       <Skill_search />
+      <My_roles />
       <button onClick={handleLogoutClick}>logout</button>
     </div>
   );
