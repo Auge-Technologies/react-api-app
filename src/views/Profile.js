@@ -21,7 +21,7 @@ const Profile = () => {
       )}
       <Skill_input name={user.given_name || "ano"} />
       <Skill_search />
-      <My_roles />
+      <My_roles user={user} />
       <button onClick={handleLogoutClick}>logout</button>
     </div>
   );
