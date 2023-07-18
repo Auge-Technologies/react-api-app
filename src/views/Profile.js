@@ -20,10 +20,7 @@ const Profile = () => {
   const [isAdmin, setIsAdmin] = useState(true);
 
   useEffect(() => {
-    const userId = user.sub;
-    console.log(userId)
-    console.log(user)
-    setUserId(userId);
+    setUserId(user.sub);
   }, [user]);
 
   useEffect(() => {

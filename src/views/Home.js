@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router-dom";
+import React, {useEffect} from "react";
+import {useAuth0} from "@auth0/auth0-react";
+import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
@@ -8,7 +9,10 @@ const Home = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/profile");
+     if ( employeeExistsInDatabase()) {
+       console.log("hei")
+     }
+      //navigate("/profile");
     }
   }, [isAuthenticated, navigate]);
 
@@ -19,6 +23,22 @@ const Home = () => {
       console.log(error);
     }
   };
+
+  const employeeExistsInDatabase = async () => {
+    let input = user.sub;
+    let parts = input.split("|");
+    let numberString = parts[1];
+    try {
+      const response = await axios.get(
+          `http://localhost:8080/employee/id/${numberString}`
+      );
+      console.log(response.data)
+      console.log(response.data.sub)
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const handleLogoutClick = () => {
     logout();
