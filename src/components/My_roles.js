@@ -36,7 +36,7 @@ const My_roles = (props) => {
   return (
     <>
       <div>
-        <h2>My_roles</h2>
+        <h2>My roles</h2>
         <ul>
           {roles.map((role, index) => (
             <li key={index}>{role.name}</li>

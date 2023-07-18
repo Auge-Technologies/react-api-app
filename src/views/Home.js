@@ -8,8 +8,6 @@ const Home = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log(user.email);
-      console.log(user.nickname);
       navigate("/profile");
     }
   }, [isAuthenticated, navigate]);

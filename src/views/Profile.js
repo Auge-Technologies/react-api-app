@@ -10,32 +10,16 @@ import Search_skills from "../components/Search_skills";
 
 const Profile = () => {
   const { logout } = useAuth0();
-  const { isAuthenticated, user } = useAuth0(); // Use the useAuth0 hook to access user information
+  const { isAuthenticated, user } = useAuth0();
 
   const [knownSkills, setKnownSkills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState();
 
   useEffect(() => {
-    const name = user.given_name;
-    let userId;
-
-    switch (name) {
-      case "Harald":
-        userId = 1;
-        break;
-      case "Fredrik":
-        userId = 2;
-        break;
-      case "Charlotte":
-        userId = 3;
-        break;
-      case "Simon":
-        userId = 4;
-        break;
-      default:
-        userId = 0; // Default value if the name doesn't match any case
-    }
+    const userId = user.sub;
+    console.log(userId)
+    console.log(user)
     setUserId(userId);
   }, [user]);
 
