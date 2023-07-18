@@ -3,6 +3,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
 import Profile from "./views/Profile";
+import Admin from "./views/Admin";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           {<Route path="/" element={<Home />} />}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </div>
     </Router>

@@ -7,14 +7,17 @@ import Known_skills from "../components/Known_skills";
 import axios from "axios";
 import Related_skills from "../components/Related_skills";
 import Search_skills from "../components/Search_skills";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { logout } = useAuth0();
-  const { isAuthenticated, user } = useAuth0();
-
+  const { isAuthenticated, user } = useAuth0(); // Use the useAuth0 hook to access user information
+  const navigate = useNavigate();
   const [knownSkills, setKnownSkills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState();
+  const [company, setCompany] = useState("Auge");
+  const [isAdmin, setIsAdmin] = useState(true);
 
   useEffect(() => {
     const userId = user.sub;
@@ -25,6 +28,7 @@ const Profile = () => {
 
   useEffect(() => {
     findKnownSkills();
+    findCompany();
   }, [userId]);
 
   const findKnownSkills = async () => {
@@ -46,8 +50,24 @@ const Profile = () => {
     }
   };
 
+  const findCompany = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/employee/getCompany/${userId}`
+      );
+      const company = response.data;
+      setCompany(company.name);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleLogoutClick = () => {
     logout();
+  };
+
+  const handleAdmin = () => {
+    navigate("/admin");
   };
 
   return (
@@ -55,6 +75,11 @@ const Profile = () => {
       {isAuthenticated && (
         <div>
           <h1>{user.given_name}</h1>
+          {isAdmin && (
+            <>
+              (administator) <button onClick={handleAdmin}>admin page</button>
+            </>
+          )}
         </div>
       )}
       {isLoading ? (
@@ -63,8 +88,8 @@ const Profile = () => {
         <Known_skills knownSkills={knownSkills} />
       )}
       <Related_skills knownSkills={knownSkills} />
-      <Search_skills user={user} />
-      <My_roles userId={userId} />
+      <Search_skills userId={userId} updateSkills={findKnownSkills} />
+      <My_roles userId={userId} company={company} />
       <button onClick={handleLogoutClick}>logout</button>
     </div>
   );
