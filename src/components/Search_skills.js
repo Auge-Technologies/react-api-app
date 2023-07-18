@@ -6,6 +6,7 @@ const Search_skills = (props) => {
   const [searchedSkills, setSearchedSkills] = useState([]);
   const [skillObjects, setSkillObjects] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const getAccessToken = async () => {
     const authData = {
@@ -54,6 +55,7 @@ const Search_skills = (props) => {
       setSkillObjects(searchedSkillsData);
       const searchedSkills = searchedSkillsData.map((skill) => skill.name);
       setSearchedSkills(searchedSkills);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
       // Handle error when API call fails
@@ -61,6 +63,7 @@ const Search_skills = (props) => {
   };
 
   const handleSearch = (searchQuery) => {
+    setIsLoading(true);
     SearchSkills(searchQuery);
   };
 
@@ -69,28 +72,23 @@ const Search_skills = (props) => {
   };
 
   const handleKnowSkill = async (skillObject) => {
-    //   try {
-    //     const employee = props.user;
-    //     console.log(employee);
-    //     const id = 1;
-    //     console.log(id);
-    //     // Create an object representing the known skill
-    //     const knownSkill = {
-    //       id: skillObject.id,
-    //       name: skillObject.name,
-    //       // Add more properties as needed
-    //     };
-    //     console.log(knownSkill);
-    //     // Make a POST request to add the known skill to the user
-    //     const response = await axios.post(
-    //       `http://localhost:8080/employee/addSkill/${id}`,
-    //       knownSkill
-    //     ); // Replace with your actual Spring Boot endpoint
-    //     console.log(response.data); // The response from the server after adding the known skill
-    //     // Call the findKnownSkills function to update the known skills list
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
+    try {
+      const employeeId = props.userId;
+      const { id, name } = skillObject;
+
+      const knownSkill = {
+        id: id,
+        name: name,
+      };
+      console.log(knownSkill);
+
+      await axios.put(
+        `http://localhost:8080/employee/add/skill/${employeeId}/${id}/${name}`
+      );
+      props.updateSkills();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -104,14 +102,18 @@ const Search_skills = (props) => {
       />
       <button onClick={() => handleSearch(searchQuery)}>🔎</button>
       <ul>
-        {searchedSkills.map((skill, index) => (
-          <li key={index}>
-            {skill}
-            <button onClick={() => handleKnowSkill(skillObjects[index])}>
-              i know this
-            </button>
-          </li>
-        ))}
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          searchedSkills.map((skill, index) => (
+            <li key={index}>
+              {skill}
+              <button onClick={() => handleKnowSkill(skillObjects[index])}>
+                i know this
+              </button>
+            </li>
+          ))
+        )}
       </ul>
     </>
   );
