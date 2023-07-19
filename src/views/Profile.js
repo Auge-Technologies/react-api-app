@@ -69,11 +69,15 @@ const Profile = () => {
     navigate(`/admin/${company}`);
   };
 
+  const handleDashboard = () => {
+    navigate("/dashboard");
+  };
+
   return (
     <div>
       {isAuthenticated && (
         <div>
-          <h1>{user.nickname}</h1>
+          <h1>{user.name}</h1>
           {isAdmin && (
             <>
               (administator) <button onClick={handleAdmin}>admin page</button>
@@ -81,6 +85,7 @@ const Profile = () => {
           )}
         </div>
       )}
+      <button onClick={handleDashboard}>Dashboard</button>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
