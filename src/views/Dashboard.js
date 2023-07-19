@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import profile_img from '../icons/manage_account.svg';
+import axios from "axios";
+import SearchRoles from "../components/SearchRoles";
 
 const Dashboard = () => {
     const { logout } = useAuth0();
@@ -72,15 +74,15 @@ const Dashboard = () => {
         return Math.round(percentageFulfilled);
     };
 
+
     return (
         <div>
             <h1>Dashboard</h1>
             <div>
                 <img src={profile_img} alt="profile" onClick={handleProfileClick} style={{ cursor: 'pointer' }} />
-            </div>
-            <button onClick={handleLogoutClick}>Logout</button>
+                    <h2>Your Goals</h2>
+                </div>
 
-            <h2>Your Goals:</h2>
             {employeeGoals.length > 0 ? (
                 <ul>
                     {employeeGoals.map((goal) => (
@@ -119,6 +121,7 @@ const Dashboard = () => {
             ) : (
                 <p>No employee goals found.</p>
             )}
+            <SearchRoles/>
         </div>
     );
 };
