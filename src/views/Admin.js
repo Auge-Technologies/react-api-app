@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import APIUserService from "../endpoints/APIUserService";
 const Admin = () => {
   const [allSkills, setAllSkills] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -16,41 +16,34 @@ const Admin = () => {
 
   const findEmployees = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/employees/1`);
-      const employees = response.data;
-      console.log(employees);
-      setEmployees(employees);
+      APIUserService.getEmployeesInCompany(1).then((response) => {
+        setEmployees(response.data);
+      })
     } catch (error) {
       console.error(error);
     }
   };
 
   const findAllSkills = async () => {
-    for (let i = 1; i < employees.length; i++) {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/employee/skills/${i}`
-        );
-        const skills = response.data;
-        setAllSkills((prevAllSkills) => [...prevAllSkills, ...skills]);
-      } catch (error) {
-        console.error(error);
+    try {
+      const allSkillsResponse = [];
+
+      for (const employee of employees) {
+        const response = await APIUserService.getEmployeeSkills(employee.id);
+        allSkillsResponse.push(...response.data);
       }
+
+      const uniqueSkills = allSkillsResponse.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+      setAllSkills(uniqueSkills);
+    } catch (error) {
+      console.error(error);
     }
-    const uniqueSkills = allSkills.reduce((acc, skill) => {
-      if (!acc.find((item) => item.name === skill.name)) {
-        acc.push(skill);
-      }
-      return acc;
-    }, []);
-    setAllSkills(uniqueSkills);
   };
+
 
   const handleGiveAdmin = async (e) => {
     try {
-      await axios.put(
-        `http://localhost:8080/employee/setAdmin/${e.id}/${true}`
-      );
+      await APIUserService.setEmployeeAdmin(e.id, true);
     } catch (error) {
       console.error(error);
     }
