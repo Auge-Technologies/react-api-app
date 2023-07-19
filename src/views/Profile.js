@@ -23,7 +23,6 @@ const Profile = () => {
     let parts = user.sub.split("|");
     let numberString = parts[1];
     setUserId(numberString);
-    console.log(numberString)
   }, [user]);
 
   useEffect(() => {
