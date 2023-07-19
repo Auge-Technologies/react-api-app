@@ -40,13 +40,13 @@ const SearchRoles = (props) => {
 
     const handleRoleGoal = async (role) => {
         console.log("role");
-        console.log(role);
+        console.log(role.id);
         try {
             setIsLoading(true);
             const response = await axios.put("http://localhost:8080/employee/add/goal", qs.stringify({
                 employeeId: userId,
-                goalId: role.id,
-                roleName: role.name
+                roleGoalId: role.id,
+                roleGoalName: role.name
             }));
             console.log("Goal added successfully");
             setIsLoading(false);
