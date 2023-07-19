@@ -32,17 +32,18 @@ const Admin = () => {
           `http://localhost:8080/employee/skills/${i}`
         );
         const skills = response.data;
-        const uniqueSkills = skills.reduce((acc, skill) => {
-          if (!acc.find((item) => item.name === skill.name)) {
-            acc.push(skill);
-          }
-          return acc;
-        }, []);
-        setAllSkills((prevAllSkills) => [...prevAllSkills, ...uniqueSkills]);
+        setAllSkills((prevAllSkills) => [...prevAllSkills, ...skills]);
       } catch (error) {
         console.error(error);
       }
     }
+    const uniqueSkills = allSkills.reduce((acc, skill) => {
+      if (!acc.find((item) => item.name === skill.name)) {
+        acc.push(skill);
+      }
+      return acc;
+    }, []);
+    setAllSkills(uniqueSkills);
   };
 
   const handleGiveAdmin = async (e) => {

@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Skill_input from "../components/Related_skills";
-import Skill_search from "../components/Search_skills";
 import My_roles from "../components/My_roles";
 import { useAuth0, Auth0Provider } from "@auth0/auth0-react";
 import Known_skills from "../components/Known_skills";
@@ -20,7 +18,9 @@ const Profile = () => {
   const [isAdmin, setIsAdmin] = useState(true);
 
   useEffect(() => {
-    setUserId(user.sub);
+    let parts = user.sub.split("|");
+    let numberString = parts[1];
+    setUserId(numberString);
   }, [user]);
 
   useEffect(() => {
