@@ -9,6 +9,7 @@ const Dashboard = () => {
     const [employeeGoals, setEmployeeGoals] = useState([]);
     const { isAuthenticated, user } = useAuth0();
     const [userId, setUserId] = useState();
+    const [missingSkills, setMissingSkills] = useState([]);
 
     const handleLogoutClick = () => {
         logout();
@@ -22,20 +23,6 @@ const Dashboard = () => {
 
     const handleProfileClick = () => {
         navigate('/profile');
-    };
-
-    const handleToggleSkills = (goalId) => {
-        setEmployeeGoals((prevGoals) => {
-            return prevGoals.map((prevGoal) => {
-                if (prevGoal.id === goalId) {
-                    return {
-                        ...prevGoal,
-                        showSkills: !prevGoal.showSkills
-                    };
-                }
-                return prevGoal;
-            });
-        });
     };
 
     useEffect(() => {
@@ -52,6 +39,39 @@ const Dashboard = () => {
         fetchEmployeeGoals();
     }, [userId]);
 
+    const handleToggleSkills = async (goalId) => {
+        setEmployeeGoals((prevGoals) => {
+            return prevGoals.map((prevGoal) => {
+                if (prevGoal.id === goalId) {
+                    return {
+                        ...prevGoal,
+                        showSkills: !prevGoal.showSkills
+                    };
+                }
+                return prevGoal;
+            });
+        });
+    };
+
+    const handleGetMissingSkills = async (employeeId, roleId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/employee/skillsMissingFromRole/${employeeId}/${roleId}`);
+            const data = await response.json();
+            setMissingSkills(data);
+        } catch (error) {
+            console.log("Error fetching missing skills:", error);
+        }
+    };
+
+    const calculateRolePercentageFulfilled = (goalId) => {
+        const goal = employeeGoals.find((goal) => goal.id === goalId);
+        const relevantSkillsCount = goal.relevantSkills.length;
+        const missingSkillsCount = missingSkills.length;
+        const fulfilledSkillsCount = relevantSkillsCount - missingSkillsCount;
+        const percentageFulfilled = (fulfilledSkillsCount / relevantSkillsCount) * 100;
+        return Math.round(percentageFulfilled);
+    };
+
     return (
         <div>
             <h1>Dashboard</h1>
@@ -60,21 +80,38 @@ const Dashboard = () => {
             </div>
             <button onClick={handleLogoutClick}>Logout</button>
 
-            <h2>Employee Goals:</h2>
+            <h2>Your Goals:</h2>
             {employeeGoals.length > 0 ? (
                 <ul>
                     {employeeGoals.map((goal) => (
                         <li key={goal.id}>
                             {goal.name}
-                            <button onClick={() => handleToggleSkills(goal.id)}>
+                            <button onClick={() => {
+                                handleToggleSkills(goal.id);
+                                handleGetMissingSkills(userId, goal.id);
+                            }}>
                                 {goal.showSkills ? 'Hide Details' : 'Show Details'}
                             </button>
                             {goal.showSkills && (
-                                <ul>
-                                    {goal.relevantSkills.map((skill, index) => (
-                                        <li key={index}>{skill.name}</li>
-                                    ))}
-                                </ul>
+                                <div>
+                                    <p>Role Fulfilled: {calculateRolePercentageFulfilled(goal.id)}%</p>
+                                    <p>Skills Required:</p>
+                                    <ul>
+                                        {goal.relevantSkills.map((skill, index) => (
+                                            <li key={index}>{skill.name}</li>
+                                        ))}
+                                    </ul>
+                                    {missingSkills.length > 0 && (
+                                        <div>
+                                            <p>Skills Not Obtained:</p>
+                                            <ul>
+                                                {missingSkills.map((missingSkill, index) => (
+                                                    <li key={index}>{missingSkill.name}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
                             )}
                         </li>
                     ))}
