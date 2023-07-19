@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import Skill_input from "../components/Related_skills";
+import Skill_search from "../components/Search_skills";
 import My_roles from "../components/My_roles";
 import { useAuth0, Auth0Provider } from "@auth0/auth0-react";
 import Known_skills from "../components/Known_skills";
@@ -71,7 +73,7 @@ const Profile = () => {
     <div>
       {isAuthenticated && (
         <div>
-          <h1>{user.given_name}</h1>
+          <h1>{user.nickname}</h1>
           {isAdmin && (
             <>
               (administator) <button onClick={handleAdmin}>admin page</button>

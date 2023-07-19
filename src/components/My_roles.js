@@ -1,12 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {useAuth0} from "@auth0/auth0-react";
 
 const My_roles = (props) => {
   const [roles, setRoles] = useState([]);
   const [userId, setUserId] = useState();
+  const { isAuthenticated, user } = useAuth0();
 
   useEffect(() => {
-    setUserId(props.userId);
+    let input = user.sub;
+    let parts = input.split("|");
+    let numberString = parts[1];
+    setUserId(numberString);
   }, [props.userId]);
 
   useEffect(() => {
