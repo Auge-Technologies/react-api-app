@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const { logout } = useAuth0();
-  const { isAuthenticated, user } = useAuth0(); // Use the useAuth0 hook to access user information
+  const { isAuthenticated, user } = useAuth0();
   const navigate = useNavigate();
   const [knownSkills, setKnownSkills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +64,7 @@ const Profile = () => {
   };
 
   const handleAdmin = () => {
-    navigate("/admin");
+    navigate(`/admin/${company}`);
   };
 
   return (
