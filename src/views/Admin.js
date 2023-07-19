@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 const Admin = () => {
   const [allSkills, setAllSkills] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [uniqueSkills, setUniqueSkills] = useState([]);
 
   useEffect(() => {
     findEmployees();
   }, []);
 
   useEffect(() => {
-    if (employees?.length) {
+    if (employees.length) {
       findAllSkills();
     }
   }, [employees]);
@@ -26,25 +28,29 @@ const Admin = () => {
   };
 
   const findAllSkills = async () => {
+    let skills = [];
     for (let i = 1; i < employees.length; i++) {
       try {
         const response = await axios.get(
           `http://localhost:8080/employee/skills/${i}`
         );
-        const skills = response.data;
-        setAllSkills((prevAllSkills) => [...prevAllSkills, ...skills]);
+        skills = [...skills, ...response.data];
       } catch (error) {
         console.error(error);
       }
     }
-    const uniqueSkills = allSkills.reduce((acc, skill) => {
+    setAllSkills(skills);
+  };
+
+  useEffect(() => {
+    const computedUniqueSkills = allSkills.reduce((acc, skill) => {
       if (!acc.find((item) => item.name === skill.name)) {
         acc.push(skill);
       }
       return acc;
     }, []);
-    setAllSkills(uniqueSkills);
-  };
+    setUniqueSkills(computedUniqueSkills);
+  }, [allSkills]);
 
   const handleGiveAdmin = async (e) => {
     try {
@@ -62,9 +68,9 @@ const Admin = () => {
       <h1>Auge Tech</h1>
       <h2>All skills</h2>
       <ul>
-        {allSkills && (
+        {uniqueSkills && (
           <>
-            {allSkills.map((skill, index) => (
+            {uniqueSkills.map((skill, index) => (
               <li key={index}>{skill.name}</li>
             ))}
           </>
