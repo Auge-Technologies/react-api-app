@@ -14,5 +14,9 @@ class APIUserService {
     setEmployeeAdmin(employeeId, isAdmin) {
         return axios.put(BACKEND_URL + "/employee/setAdmin/" + employeeId + "/" + isAdmin);
     }
+
+    getEmployeeCompany(employeeId) {
+        return axios.get(BACKEND_URL + "/employee/getCompany/" + employeeId);
+    }
 }
 export default new APIUserService();

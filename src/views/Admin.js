@@ -15,13 +15,11 @@ const Admin = () => {
   }, [employees]);
 
   const findEmployees = async () => {
-    try {
-      APIUserService.getEmployeesInCompany(1).then((response) => {
-        setEmployees(response.data);
-      })
-    } catch (error) {
+    APIUserService.getEmployeesInCompany(1).then((response) => {
+      setEmployees(response.data);
+    }).catch(error => {
       console.error(error);
-    }
+    })
   };
 
   const findAllSkills = async () => {
