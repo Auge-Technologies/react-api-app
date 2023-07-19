@@ -9,10 +9,8 @@ const Home = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      if (employeeExistsInDatabase()) {
-        console.log("hei");
-      }
-      navigate("/profile");
+      employeeExistsInDatabase()
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -28,16 +26,34 @@ const Home = () => {
     let input = user.sub;
     let parts = input.split("|");
     let numberString = parts[1];
-    console.log(numberString);
     try {
       const response = await axios.get(
         `http://localhost:8080/employee/id/${numberString}`
       );
-      console.log(response.data);
-      console.log(response.data.sub);
       return response.data;
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 500) {
+        try {
+          const params = new URLSearchParams();
+          params.append("employeeId", numberString);
+          params.append("name", user.nickname);
+          params.append("email", user.email);
+          params.append("companyId", "1");
+
+          const response = await axios.put("http://localhost:8080/add/employee", params.toString());
+          console.log("Employee added successfully:", response.data);
+        } catch (error) {
+          if (error.response && error.response.status === 400) {
+            console.log("Bad request:", error.response.data);
+          } else if (error.response && error.response.status === 404) {
+            console.log("Company not found:", error.response.data);
+          } else {
+            console.log("An error occurred:", error.message);
+          }
+        }
+      } else {
+        console.log("An error occurred:", error.message);
+      }
     }
   };
 
