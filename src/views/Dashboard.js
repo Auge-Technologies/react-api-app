@@ -4,25 +4,13 @@ import profile_img from "../icons/manage_account.svg";
 import axios from "axios";
 import SearchRoles from "../components/SearchRoles";
 import useAuth from "../hooks/useAuth";
+import useUserId from "../hooks/useUserId";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [employeeGoals, setEmployeeGoals] = useState([]);
-  const { isAuthenticated, user, logout } = useAuth();
-  const [userId, setUserId] = useState();
   const [missingSkills, setMissingSkills] = useState([]);
-
-  const handleLogoutClick = () => {
-    logout();
-  };
-
-  useEffect(() => {
-    if (user) {
-      let parts = user.sub.split("|");
-      let numberString = parts[1];
-      setUserId(numberString);
-    }
-  }, [user]);
+  const { userId } = useUserId();
 
   const handleProfileClick = () => {
     navigate("/profile");

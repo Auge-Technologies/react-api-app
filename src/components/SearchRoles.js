@@ -2,21 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import qs from "qs";
 import { useAuth0 } from "@auth0/auth0-react";
+import useUserId from "../hooks/useUserId";
 
 const SearchRoles = (props) => {
   const [searchedRole, setSearchedRole] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { isAuthenticated, user } = useAuth0();
-  const [userId, setUserId] = useState();
-
-  useEffect(() => {
-    if (user) {
-      let parts = user.sub.split("|");
-      let numberString = parts[1];
-      setUserId(numberString);
-    }
-  }, [user]);
+  const { userId } = useUserId();
 
   const searchRoles = async (searchQuery) => {
     try {

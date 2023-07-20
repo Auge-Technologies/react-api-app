@@ -6,28 +6,23 @@ import Related_skills from "../components/Related_skills";
 import Search_skills from "../components/Search_skills";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import useUserId from "../hooks/useUserId";
+import useFetchApi from "../hooks/useFetchApi";
 
 const Profile = () => {
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const [knownSkills, setKnownSkills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [userId, setUserId] = useState();
-  const [company, setCompany] = useState("Auge");
+  const { userId } = useUserId();
   const [isAdmin, setIsAdmin] = useState(true);
 
-  useEffect(() => {
-    console.log(user);
-    if (user) {
-      let parts = user.sub.split("|");
-      let numberString = parts[1];
-      setUserId(numberString);
-    }
-  }, [user]);
+  const { data: company } = useFetchApi(
+    `http://localhost:8080/employee/getCompany/${userId}`
+  );
 
   useEffect(() => {
     findKnownSkills();
-    findCompany();
   }, [userId]);
 
   const findKnownSkills = async () => {
@@ -44,18 +39,6 @@ const Profile = () => {
       }, []);
       setKnownSkills(uniqueSkills);
       setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const findCompany = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/employee/getCompany/${userId}`
-      );
-      const company = response.data;
-      setCompany(company.name);
     } catch (error) {
       console.error(error);
     }

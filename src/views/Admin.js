@@ -1,14 +1,27 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useFetchApi from "../hooks/useFetchApi";
 
 const Admin = () => {
   const [allSkills, setAllSkills] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [uniqueSkills, setUniqueSkills] = useState([]);
   const [companyName, setCompanyName] = useState("");
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const { data: employeesData, error: employeesError } = useFetchApi(
+    `http://localhost:8080/employees/1`,
+    refreshKey
+  );
 
   useEffect(() => {
-    findEmployees();
+    if (employeesData) {
+      setEmployees(employeesData);
+      console.log(employeesData);
+    }
+  }, [employeesData]);
+
+  useEffect(() => {
     extractCompanyName();
   }, []);
 
@@ -17,17 +30,6 @@ const Admin = () => {
       findAllSkills();
     }
   }, [employees]);
-
-  const findEmployees = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/employees/1`);
-      const employees = response.data;
-      console.log(employees);
-      setEmployees(employees);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const findAllSkills = async () => {
     let skills = [];
@@ -66,10 +68,10 @@ const Admin = () => {
       await axios.put(
         `http://localhost:8080/employee/setAdmin/${e.id}/${true}`
       );
+      setRefreshKey((refreshKey) => refreshKey + 1); // Trigger refresh of useFetchApi hook
     } catch (error) {
       console.error(error);
     }
-    findEmployees();
   };
 
   return (
