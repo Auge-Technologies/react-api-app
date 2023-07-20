@@ -9,18 +9,18 @@ const SearchRoles = (props) => {
     const [searchedRole, setSearchedRole] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const { isAuthenticated, user } = useAuth0();
+    const {isAuthenticated, user} = useAuth0();
     const [userId, setUserId] = useState();
     const [buttonClicked, setButtonClicked] = useState(false);
     const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user) {
-      let parts = user.sub.split("|");
-      let numberString = parts[1];
-      setUserId(numberString);
-    }
-  }, [user]);
+    useEffect(() => {
+        if (user) {
+            let parts = user.sub.split("|");
+            let numberString = parts[1];
+            setUserId(numberString);
+        }
+    }, [user]);
 
 
     const searchRoles = async (searchQuery) => {
@@ -47,14 +47,9 @@ const SearchRoles = (props) => {
         searchRoles(searchQuery);
     };
 
-  const handleSearch = (searchQuery) => {
-    setIsLoading(true);
-    searchRoles(searchQuery);
-  };
-
-  const handleChange = (event) => {
-    setSearchQuery(event.target.value);
-  };
+    const handleChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
 
     const handleRoleGoal = async (role) => {
         try {
@@ -65,6 +60,7 @@ const SearchRoles = (props) => {
                 roleGoalName: role.name
             }));
             setIsLoading(false);
+            window.location.reload();
         } catch (error) {
             console.error("Error adding goal:", error);
             setIsLoading(false);
@@ -99,5 +95,5 @@ const SearchRoles = (props) => {
             </ul>
         </>
     );
-
+}
 export default SearchRoles;
