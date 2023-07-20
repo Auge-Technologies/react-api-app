@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
 import useAuth from "../hooks/useAuth";
 
 const My_roles = (props) => {
@@ -9,7 +8,6 @@ const My_roles = (props) => {
   const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
-    console.log(user);
     if (user) {
       let parts = user.sub.split("|");
       let numberString = parts[1];

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import My_roles from "../components/My_roles";
-import { useAuth0, Auth0Provider } from "@auth0/auth0-react";
 import Known_skills from "../components/Known_skills";
 import axios from "axios";
 import Related_skills from "../components/Related_skills";
