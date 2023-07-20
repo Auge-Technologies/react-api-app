@@ -32,23 +32,13 @@ const Search_skills = (props) => {
   };
 
   const handleKnowSkill = async (skillObject) => {
-    try {
-      const employeeId = props.userId;
-      const { id, name } = skillObject;
-
-      const knownSkill = {
-        id: id,
-        name: name,
-      };
-      console.log(knownSkill);
-
-      await axios.put(
-        `http://localhost:8080/employee/add/skill/${employeeId}/${id}/${name}`
-      );
+    const employeeId = props.userId;
+    const { id, name } = skillObject;
+    APIUserService.addSkillToEmployee(employeeId, id, name).then(() => {
       props.updateSkills();
-    } catch (error) {
-      console.error(error);
-    }
+    }).catch(error => {
+      console.log(error);
+    })
   };
 
   return (

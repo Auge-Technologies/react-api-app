@@ -34,5 +34,9 @@ class APIUserService {
     getSKillsBySearch(searchString, limit) {
         return axios.get(BACKEND_URL + "/skill/search/" + searchString + "/" + limit);
     }
+
+    addSkillToEmployee(employeeId, skillId, skillName) {
+        return axios.put(BACKEND_URL + "/employee/add/skill/" + employeeId + "/" + skillId + "/" + skillName);
+    }
 }
 export default new APIUserService();
