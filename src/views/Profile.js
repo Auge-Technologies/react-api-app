@@ -22,7 +22,12 @@ const Profile = () => {
 
   useEffect(() => {
     let parts = user.sub.split("|");
-    let numberString = parts[1];
+    let numberString;
+    if (parts.length === 1) {
+        numberString = parts[0];
+    } else if (parts.length === 2) {
+        numberString = parts[1];
+    }
     setUserId(numberString);
     console.log(numberString)
   }, [user]);

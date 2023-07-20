@@ -18,5 +18,21 @@ class APIUserService {
     getEmployeeCompany(employeeId) {
         return axios.get(BACKEND_URL + "/employee/getCompany/" + employeeId);
     }
+
+    getEmployee(employeeId) {
+        return axios.get(BACKEND_URL + "/employee/id/" + employeeId);
+    }
+
+    getRelatedSkillsByEmployee(employeeId) {
+        return axios.get(BACKEND_URL + "/employee/related/skills/" + employeeId);
+    }
+
+    getRelatedSkills(skillIds) {
+        return axios.get(BACKEND_URL + "/skill/related/" + skillIds)
+    }
+
+    getSKillsBySearch(searchString, limit) {
+        return axios.get(BACKEND_URL + "/skill/search/" + searchString + "/" + limit);
+    }
 }
 export default new APIUserService();
