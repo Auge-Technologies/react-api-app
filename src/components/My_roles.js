@@ -19,7 +19,7 @@ const My_roles = (props) => {
     fetchEmployeeRoles(userId);
   }, [userId]);
 
-  const fetchEmployeeRoles = async (userId) => {
+/*  const fetchEmployeeRoles = async (userId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/employee/roles/${userId}`
@@ -36,6 +36,23 @@ const My_roles = (props) => {
       setRoles(uniqueRoles);
     } catch (error) {
       console.error(error);
+    }
+  };*/
+
+  useEffect(() => {
+    fetchEmployeeRoles(userId);
+  }, [userId]);
+
+  const fetchEmployeeRoles = async (userId) => {
+    try {
+      const response = await axios.get(
+          `http://localhost:8080/employee/qualifiedRoles/${userId}`
+      );
+      const rolesData = response.data;
+      console.log(rolesData);
+      setRoles(rolesData);
+    } catch (error) {
+      console.error("Error fetching employee roles:", error);
     }
   };
 

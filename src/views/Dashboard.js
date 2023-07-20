@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import profile_img from "../icons/manage_account.svg";
-import axios from "axios";
+
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useNavigate } from 'react-router-dom';
+import profile_img from '../icons/manage_account.svg';
 import SearchRoles from "../components/SearchRoles";
-import useAuth from "../hooks/useAuth";
+import axios from "axios";
+import qs from "qs";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -58,6 +60,17 @@ const Dashboard = () => {
     });
   };
 
+
+    const calculateRolePercentageFulfilled = (goalId) => {
+        const goal = employeeGoals.find((goal) => goal.id === goalId);
+        const relevantSkillsCount = goal.relevantSkills.length;
+        const missingSkillsCount = missingSkills.length;
+        const fulfilledSkillsCount = relevantSkillsCount - missingSkillsCount;
+        const percentageFulfilled = (fulfilledSkillsCount / relevantSkillsCount) * 100;
+        
+        return Math.round(percentageFulfilled);
+    };
+
   const handleGetMissingSkills = async (employeeId, roleId) => {
     try {
       const response = await fetch(
@@ -69,6 +82,7 @@ const Dashboard = () => {
       console.log("Error fetching missing skills:", error);
     }
   };
+
 
   const calculateRolePercentageFulfilled = (goalId) => {
     const goal = employeeGoals.find((goal) => goal.id === goalId);
