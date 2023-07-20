@@ -21,7 +21,7 @@ function App() {
           {<Route path="/" element={<Home />} />}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/*" element={<Admin />} />
         </Routes>
       </div>
     </Router>
@@ -43,4 +43,4 @@ function Auth0App() {
   );
 }
 
-export default Auth0App;
+export default App;

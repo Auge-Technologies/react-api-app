@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {useAuth0} from "@auth0/auth0-react";
+import useAuth from "../hooks/useAuth";
 
 const My_roles = (props) => {
   const [roles, setRoles] = useState([]);
   const [userId, setUserId] = useState();
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
-    let input = user.sub;
-    let parts = input.split("|");
-    let numberString = parts[1];
-    setUserId(numberString);
-  }, [props.userId]);
+    if (user) {
+      let parts = user.sub.split("|");
+      let numberString = parts[1];
+      setUserId(numberString);
+    }
+  }, [user]);
 
   useEffect(() => {
     fetchEmployeeRoles(userId);
   }, [userId]);
 
-  const fetchEmployeeRoles = async (userId) => {
+/*  const fetchEmployeeRoles = async (userId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/employee/roles/${userId}`
@@ -35,6 +36,23 @@ const My_roles = (props) => {
       setRoles(uniqueRoles);
     } catch (error) {
       console.error(error);
+    }
+  };*/
+
+  useEffect(() => {
+    fetchEmployeeRoles(userId);
+  }, [userId]);
+
+  const fetchEmployeeRoles = async (userId) => {
+    try {
+      const response = await axios.get(
+          `http://localhost:8080/employee/qualifiedRoles/${userId}`
+      );
+      const rolesData = response.data;
+      console.log(rolesData);
+      setRoles(rolesData);
+    } catch (error) {
+      console.error("Error fetching employee roles:", error);
     }
   };
 

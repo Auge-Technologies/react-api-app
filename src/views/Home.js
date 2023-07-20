@@ -2,14 +2,16 @@ import React, { useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useAuth from "../hooks/useAuth";
 
 const Home = () => {
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) {
-      employeeExistsInDatabase()
+      employeeExistsInDatabase();
       navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
@@ -45,7 +47,10 @@ const Home = () => {
           params.append("email", user.email);
           params.append("companyId", "1");
 
-          const response = await axios.put("http://localhost:8080/add/employee", params.toString());
+          const response = await axios.put(
+            "http://localhost:8080/add/employee",
+            params.toString()
+          );
           console.log("Employee added successfully:", response.data);
         } catch (error) {
           if (error.response && error.response.status === 400) {

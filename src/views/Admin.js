@@ -4,8 +4,12 @@ const Admin = () => {
   const [allSkills, setAllSkills] = useState([]);
   const [employees, setEmployees] = useState([]);
 
+  const [uniqueSkills, setUniqueSkills] = useState([]);
+  const [companyName, setCompanyName] = useState("");
+
   useEffect(() => {
     findEmployees();
+    extractCompanyName();
   }, []);
 
   useEffect(() => {
@@ -38,6 +42,22 @@ const Admin = () => {
     }
   };
 
+  const extractCompanyName = () => {
+    const path = window.location.pathname;
+    const segments = path.split("/");
+    const companyName = segments[segments.length - 1].replace("%20", " ");
+    setCompanyName(companyName);
+  };
+
+  useEffect(() => {
+    const computedUniqueSkills = allSkills.reduce((acc, skill) => {
+      if (!acc.find((item) => item.name === skill.name)) {
+        acc.push(skill);
+      }
+      return acc;
+    }, []);
+    setUniqueSkills(computedUniqueSkills);
+  }, [allSkills]);
 
   const handleGiveAdmin = async (e) => {
     try {
@@ -50,7 +70,7 @@ const Admin = () => {
 
   return (
     <>
-      <h1>Auge Tech</h1>
+      <h1>{companyName}</h1>
       <h2>All skills</h2>
       <ul>
         {allSkills && (
