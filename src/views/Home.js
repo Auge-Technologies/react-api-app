@@ -26,8 +26,13 @@ const Home = () => {
 
   const employeeExistsInDatabase = async () => {
     let input = user.sub;
+    let numberString
     let parts = input.split("|");
-    let numberString = parts[1];
+    if (parts.length === 1) {
+      numberString = parts[0];
+    } else if (parts.length === 2) {
+      numberString = parts[1];
+    }
     try {
       const response = await axios.get(
         `http://localhost:8080/employee/id/${numberString}`

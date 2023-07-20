@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import qs from "qs";
+import APIUserService from "../endpoints/APIUserService";
 
 const Related_skills = (props) => {
   const [relatedSkills, setRelatedSkills] = useState([]);
@@ -8,52 +9,16 @@ const Related_skills = (props) => {
   const [isExpanded, setIsExpanded] = useState([]);
   const [isLoading, setIsLoading] = useState();
 
-  const getAccessToken = async () => {
-    const authData = {
-      client_id: "uj7mks4c41f42frd",
-      client_secret: "eBcoBJoG",
-      grant_type: "client_credentials",
-      scope: "emsi_open",
-    };
-
-    try {
-      const response = await axios.post(
-        "https://auth.emsicloud.com/connect/token",
-        qs.stringify(authData)
-      );
-      const accessToken = response.data.access_token;
-      return accessToken;
-    } catch (error) {
-      console.log(error);
-      return null;
-    }
-  };
-
   const getRelatedSkills = async (skills, setSkills) => {
     setIsLoading(true);
-    try {
-      const accessToken = await getAccessToken();
-
-      if (accessToken && skills.length > 0) {
-        const response = await axios.post(
-          "https://emsiservices.com/skills/versions/latest/related",
-          {
-            ids: skills.map((skill) => skill.id),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const relatedSkillsData = response.data.data || [];
+    if (skills.length > 0) {
+      APIUserService.getRelatedSkills(skills.map((skill) => skill.id)).then(response => {
+        const relatedSkillsData = response.data;
         setSkills(relatedSkillsData);
         setIsLoading(false);
-      }
-    } catch (error) {
-      console.log(error);
+      }).catch(error => {
+        console.log(error);
+      })
     }
   };
 

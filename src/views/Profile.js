@@ -5,6 +5,7 @@ import axios from "axios";
 import Related_skills from "../components/Related_skills";
 import Search_skills from "../components/Search_skills";
 import { useNavigate } from "react-router-dom";
+import APIUserService from "../endpoints/APIUserService";
 import useAuth from "../hooks/useAuth";
 
 const Profile = () => {
@@ -31,34 +32,30 @@ const Profile = () => {
   }, [userId]);
 
   const findKnownSkills = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/employee/skills/${userId}`
-      );
-      const skills = response.data;
-      const uniqueSkills = skills.reduce((acc, skill) => {
-        if (!acc.find((item) => item.name === skill.name)) {
-          acc.push(skill);
-        }
-        return acc;
-      }, []);
-      setKnownSkills(uniqueSkills);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
+    APIUserService.getEmployeeSkills(userId)
+        .then((response) => {
+          const skills = response.data;
+          const uniqueSkills = skills.reduce((acc, skill) => {
+            if (!acc.find((item) => item.name === skill.name)) {
+              acc.push(skill);
+            }
+            return acc;
+          }, []);
+          setKnownSkills(uniqueSkills);
+          setIsLoading(false);
+        })
+        .catch(error => {
+          console.error(error);
+        });
   };
 
+
   const findCompany = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/employee/getCompany/${userId}`
-      );
-      const company = response.data;
-      setCompany(company.name);
-    } catch (error) {
-      console.error(error);
-    }
+    APIUserService.getEmployeeCompany(userId).then(response => {
+      setCompany(response.data.name);
+    }).catch(error => {
+      console.log(error);
+    })
   };
 
   const handleLogoutClick = () => {

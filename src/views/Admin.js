@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-
+import APIUserService from "../endpoints/APIUserService";
 const Admin = () => {
   const [allSkills, setAllSkills] = useState([]);
   const [employees, setEmployees] = useState([]);
+
   const [uniqueSkills, setUniqueSkills] = useState([]);
   const [companyName, setCompanyName] = useState("");
 
@@ -13,35 +13,33 @@ const Admin = () => {
   }, []);
 
   useEffect(() => {
-    if (employees.length) {
+    if (employees?.length) {
       findAllSkills();
     }
   }, [employees]);
 
   const findEmployees = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/employees/1`);
-      const employees = response.data;
-      console.log(employees);
-      setEmployees(employees);
-    } catch (error) {
+    APIUserService.getEmployeesInCompany(1).then((response) => {
+      setEmployees(response.data);
+    }).catch(error => {
       console.error(error);
-    }
+    })
   };
 
   const findAllSkills = async () => {
-    let skills = [];
-    for (let i = 1; i < employees.length; i++) {
-      try {
-        const response = await axios.get(
-          `http://localhost:8080/employee/skills/${i}`
-        );
-        skills = [...skills, ...response.data];
-      } catch (error) {
-        console.error(error);
+    try {
+      const allSkillsResponse = [];
+
+      for (const employee of employees) {
+        const response = await APIUserService.getEmployeeSkills(employee.id);
+        allSkillsResponse.push(...response.data);
       }
+
+      const uniqueSkills = allSkillsResponse.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i);
+      setAllSkills(uniqueSkills);
+    } catch (error) {
+      console.error(error);
     }
-    setAllSkills(skills);
   };
 
   const extractCompanyName = () => {
@@ -63,9 +61,7 @@ const Admin = () => {
 
   const handleGiveAdmin = async (e) => {
     try {
-      await axios.put(
-        `http://localhost:8080/employee/setAdmin/${e.id}/${true}`
-      );
+      await APIUserService.setEmployeeAdmin(e.id, true);
     } catch (error) {
       console.error(error);
     }
@@ -77,9 +73,9 @@ const Admin = () => {
       <h1>{companyName}</h1>
       <h2>All skills</h2>
       <ul>
-        {uniqueSkills && (
+        {allSkills && (
           <>
-            {uniqueSkills.map((skill, index) => (
+            {allSkills.map((skill, index) => (
               <li key={index}>{skill.name}</li>
             ))}
           </>

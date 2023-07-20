@@ -43,4 +43,4 @@ function Auth0App() {
   );
 }
 
-export default Auth0App;
+export default App;
