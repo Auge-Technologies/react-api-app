@@ -5,6 +5,7 @@ import qs from "qs"
 import { useNavigate } from "react-router-dom";
 
 const SearchRoles = (props) => {
+
     const [searchedRole, setSearchedRole] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -13,11 +14,14 @@ const SearchRoles = (props) => {
     const [buttonClicked, setButtonClicked] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        let parts = user.sub.split("|");
-        let numberString = parts[1];
-        setUserId(numberString);
-    }, [user]);
+  useEffect(() => {
+    if (user) {
+      let parts = user.sub.split("|");
+      let numberString = parts[1];
+      setUserId(numberString);
+    }
+  }, [user]);
+
 
     const searchRoles = async (searchQuery) => {
         try {
@@ -43,9 +47,14 @@ const SearchRoles = (props) => {
         searchRoles(searchQuery);
     };
 
-    const handleChange = (event) => {
-        setSearchQuery(event.target.value);
-    };
+  const handleSearch = (searchQuery) => {
+    setIsLoading(true);
+    searchRoles(searchQuery);
+  };
+
+  const handleChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
     const handleRoleGoal = async (role) => {
         try {
@@ -90,6 +99,5 @@ const SearchRoles = (props) => {
             </ul>
         </>
     );
-};
 
 export default SearchRoles;
