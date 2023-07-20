@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Skill_input from "../components/Related_skills";
-import Skill_search from "../components/Search_skills";
 import My_roles from "../components/My_roles";
 import { useAuth0, Auth0Provider } from "@auth0/auth0-react";
 import Known_skills from "../components/Known_skills";
@@ -8,10 +6,10 @@ import axios from "axios";
 import Related_skills from "../components/Related_skills";
 import Search_skills from "../components/Search_skills";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 const Profile = () => {
-  const { logout } = useAuth0();
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
   const [knownSkills, setKnownSkills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,9 +18,12 @@ const Profile = () => {
   const [isAdmin, setIsAdmin] = useState(true);
 
   useEffect(() => {
-    let parts = user.sub.split("|");
-    let numberString = parts[1];
-    setUserId(numberString);
+    console.log(user);
+    if (user) {
+      let parts = user.sub.split("|");
+      let numberString = parts[1];
+      setUserId(numberString);
+    }
   }, [user]);
 
   useEffect(() => {
