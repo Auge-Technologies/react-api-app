@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import {useEffect, useState} from "react";
+import {useAuth0} from "@auth0/auth0-react";
 import axios from "axios";
-import qs from "qs";
-import { useAuth0 } from "@auth0/auth0-react";
+import qs from "qs"
+import { useNavigate } from "react-router-dom";
 
 const SearchRoles = (props) => {
     const [searchedRole, setSearchedRole] = useState([]);
@@ -9,6 +10,8 @@ const SearchRoles = (props) => {
     const [isLoading, setIsLoading] = useState(false);
     const { isAuthenticated, user } = useAuth0();
     const [userId, setUserId] = useState();
+    const [buttonClicked, setButtonClicked] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         let parts = user.sub.split("|");
@@ -19,9 +22,14 @@ const SearchRoles = (props) => {
     const searchRoles = async (searchQuery) => {
         try {
             setIsLoading(true);
-            const response = await axios.get(`http://localhost:8080/roles/search/${searchQuery}`);
-            console.log(response.data);
-            setSearchedRole(response.data);
+            const response = await axios.get(
+                `http://localhost:8080/roles/search/${searchQuery}`
+            );
+            if (response.data.length === 0) {
+                setSearchedRole([]); // Reset the searchedRole state if there are no results
+            } else {
+                setSearchedRole(response.data);
+            }
             setIsLoading(false);
         } catch (error) {
             console.error("Error searching for roles:", error);
@@ -31,6 +39,7 @@ const SearchRoles = (props) => {
 
     const handleSearch = (searchQuery) => {
         setIsLoading(true);
+        setButtonClicked(true); // Set the buttonClicked state to true when the button is clicked
         searchRoles(searchQuery);
     };
 
@@ -39,8 +48,6 @@ const SearchRoles = (props) => {
     };
 
     const handleRoleGoal = async (role) => {
-        console.log("role");
-        console.log(role.id);
         try {
             setIsLoading(true);
             const response = await axios.put("http://localhost:8080/employee/add/goal", qs.stringify({
@@ -48,7 +55,6 @@ const SearchRoles = (props) => {
                 roleGoalId: role.id,
                 roleGoalName: role.name
             }));
-            console.log("Goal added successfully");
             setIsLoading(false);
         } catch (error) {
             console.error("Error adding goal:", error);
@@ -66,12 +72,11 @@ const SearchRoles = (props) => {
                 onChange={handleChange}
             />
             <button onClick={() => handleSearch(searchQuery)}>🔎</button>
-            {searchedRole.length === 0 && (
-                <p>No such role...</p>
-            )}
             <ul>
                 {isLoading ? (
                     <p>Loading...</p>
+                ) : buttonClicked && searchedRole.length === 0 ? ( // Display "No such role" if the button is clicked and there are no results
+                    <p>No such role...</p>
                 ) : (
                     searchedRole.map((role, index) => (
                         <li key={index}>

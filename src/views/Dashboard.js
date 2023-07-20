@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import profile_img from '../icons/manage_account.svg';
-import axios from "axios";
 import SearchRoles from "../components/SearchRoles";
+import axios from "axios";
+import qs from "qs";
 
 const Dashboard = () => {
     const { logout } = useAuth0();
@@ -71,6 +72,7 @@ const Dashboard = () => {
         const missingSkillsCount = missingSkills.length;
         const fulfilledSkillsCount = relevantSkillsCount - missingSkillsCount;
         const percentageFulfilled = (fulfilledSkillsCount / relevantSkillsCount) * 100;
+        
         return Math.round(percentageFulfilled);
     };
 
