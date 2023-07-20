@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router-dom";
-import profile_img from "../icons/manage_account.svg";
+
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useNavigate } from 'react-router-dom';
+import profile_img from '../icons/manage_account.svg';
+import axios from "axios";
+import SearchRoles from "../components/SearchRoles";
 import useAuth from "../hooks/useAuth";
+
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -79,64 +83,57 @@ const Dashboard = () => {
     return Math.round(percentageFulfilled);
   };
 
-  return (
-    <div>
-      <h1>Dashboard</h1>
-      <div>
-        <img
-          src={profile_img}
-          alt="profile"
-          onClick={handleProfileClick}
-          style={{ cursor: "pointer" }}
-        />
-      </div>
-      <button onClick={handleLogoutClick}>Logout</button>
 
-      <h2>Your Goals:</h2>
-      {employeeGoals.length > 0 ? (
-        <ul>
-          {employeeGoals.map((goal) => (
-            <li key={goal.id}>
-              {goal.name}
-              <button
-                onClick={() => {
-                  handleToggleSkills(goal.id);
-                  handleGetMissingSkills(userId, goal.id);
-                }}
-              >
-                {goal.showSkills ? "Hide Details" : "Show Details"}
-              </button>
-              {goal.showSkills && (
-                <div>
-                  <p>
-                    Role Fulfilled: {calculateRolePercentageFulfilled(goal.id)}%
-                  </p>
-                  <p>Skills Required:</p>
-                  <ul>
-                    {goal.relevantSkills.map((skill, index) => (
-                      <li key={index}>{skill.name}</li>
-                    ))}
-                  </ul>
-                  {missingSkills.length > 0 && (
-                    <div>
-                      <p>Skills Not Obtained:</p>
-                      <ul>
-                        {missingSkills.map((missingSkill, index) => (
-                          <li key={index}>{missingSkill.name}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+
+    return (
+        <div>
+            <h1>Dashboard</h1>
+            <div>
+                <img src={profile_img} alt="profile" onClick={handleProfileClick} style={{ cursor: 'pointer' }} />
+                    <h2>Your Goals</h2>
                 </div>
-              )}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No employee goals found.</p>
-      )}
-    </div>
-  );
+
+            {employeeGoals.length > 0 ? (
+                <ul>
+                    {employeeGoals.map((goal) => (
+                        <li key={goal.id}>
+                            {goal.name}
+                            <button onClick={() => {
+                                handleToggleSkills(goal.id);
+                                handleGetMissingSkills(userId, goal.id);
+                            }}>
+                                {goal.showSkills ? 'Hide Details' : 'Show Details'}
+                            </button>
+                            {goal.showSkills && (
+                                <div>
+                                    <p>Role Fulfilled: {calculateRolePercentageFulfilled(goal.id)}%</p>
+                                    <p>Skills Required:</p>
+                                    <ul>
+                                        {goal.relevantSkills.map((skill, index) => (
+                                            <li key={index}>{skill.name}</li>
+                                        ))}
+                                    </ul>
+                                    {missingSkills.length > 0 && (
+                                        <div>
+                                            <p>Skills Not Obtained:</p>
+                                            <ul>
+                                                {missingSkills.map((missingSkill, index) => (
+                                                    <li key={index}>{missingSkill.name}</li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p>No employee goals found.</p>
+            )}
+            <SearchRoles/>
+        </div>
+    );
 };
 
 export default Dashboard;
