@@ -1,56 +1,38 @@
-
-import React, { useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { useNavigate } from 'react-router-dom';
-import profile_img from '../icons/manage_account.svg';
+import React, { useEffect, useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
+import profile_img from "../icons/manage_account.svg";
 import SearchRoles from "../components/SearchRoles";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
 import qs from "qs";
+import useUserId from "../hooks/useUserId";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [employeeGoals, setEmployeeGoals] = useState([]);
-  const { isAuthenticated, user, logout } = useAuth();
-  const [userId, setUserId] = useState();
   const [missingSkills, setMissingSkills] = useState([]);
-
-  const handleLogoutClick = () => {
-    logout();
-  };
-
-  useEffect(() => {
-    if (user) {
-      let parts = user.sub.split("|");
-      let numberString
-      if (parts.length === 1) {
-        numberString = parts[0];
-      } else if (parts.length === 2) {
-        numberString = parts[1];
-      }
-      setUserId(numberString);
-    }
-  }, [user]);
+  const { userId } = useUserId();
 
   const handleProfileClick = () => {
     navigate("/profile");
   };
 
   useEffect(() => {
-    const fetchEmployeeGoals = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:8080/employee/goals/${userId}`
-        );
-        const data = await response.json();
-        setEmployeeGoals(data);
-      } catch (error) {
-        console.log("Error fetching employee goals:", error);
-      }
-    };
-
     fetchEmployeeGoals();
   }, [userId]);
+
+  const fetchEmployeeGoals = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/employee/goals/${userId}`
+      );
+      const data = await response.json();
+      setEmployeeGoals(data);
+    } catch (error) {
+      console.log("Error fetching employee goals:", error);
+    }
+  };
 
   const handleToggleSkills = async (goalId) => {
     setEmployeeGoals((prevGoals) => {
@@ -77,7 +59,6 @@ const Dashboard = () => {
       console.log("Error fetching missing skills:", error);
     }
   };
-
 
   const calculateRolePercentageFulfilled = (goalId) => {
     const goal = employeeGoals.find((goal) => goal.id === goalId);
@@ -144,7 +125,7 @@ const Dashboard = () => {
       ) : (
         <p>No employee goals found.</p>
       )}
-      <SearchRoles />
+      <SearchRoles update={fetchEmployeeGoals} />
     </div>
   );
 };

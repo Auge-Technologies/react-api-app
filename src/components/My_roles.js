@@ -1,25 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
+import useUserId from "../hooks/useUserId";
 
 const My_roles = (props) => {
   const [roles, setRoles] = useState([]);
-  const [userId, setUserId] = useState();
-  const { isAuthenticated, user } = useAuth();
-
-  useEffect(() => {
-    if (user) {
-      let parts = user.sub.split("|");
-      let numberString = parts[1];
-      setUserId(numberString);
-    }
-  }, [user]);
+  const { userId } = useUserId();
 
   useEffect(() => {
     fetchEmployeeRoles(userId);
   }, [userId]);
 
-/*  const fetchEmployeeRoles = async (userId) => {
+  /*  const fetchEmployeeRoles = async (userId) => {
     try {
       const response = await axios.get(
         `http://localhost:8080/employee/roles/${userId}`
@@ -46,7 +38,7 @@ const My_roles = (props) => {
   const fetchEmployeeRoles = async (userId) => {
     try {
       const response = await axios.get(
-          `http://localhost:8080/employee/qualifiedRoles/${userId}`
+        `http://localhost:8080/employee/qualifiedRoles/${userId}`
       );
       const rolesData = response.data;
       console.log(rolesData);
