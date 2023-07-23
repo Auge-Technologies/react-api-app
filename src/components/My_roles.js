@@ -1,57 +1,43 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import useAuth from "../hooks/useAuth";
 import useUserId from "../hooks/useUserId";
+import APIUserService from "../endpoints/APIUserService";
 
 const My_roles = (props) => {
   const [roles, setRoles] = useState([]);
+  const [company, setCompany] = useState("");
   const { userId } = useUserId();
 
   useEffect(() => {
     fetchEmployeeRoles(userId);
-  }, [userId]);
-
-  /*  const fetchEmployeeRoles = async (userId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/employee/roles/${userId}`
-      );
-      const rolesData = response.data;
-
-      const uniqueRoles = rolesData.reduce((acc, role) => {
-        if (!acc.find((item) => item.name === role.name)) {
-          acc.push(role);
-        }
-        return acc;
-      }, []);
-
-      setRoles(uniqueRoles);
-    } catch (error) {
-      console.error(error);
-    }
-  };*/
-
-  useEffect(() => {
-    fetchEmployeeRoles(userId);
+    fetchCompany(userId);
   }, [userId]);
 
   const fetchEmployeeRoles = async (userId) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/employee/qualifiedRoles/${userId}`
-      );
-      const rolesData = response.data;
-      console.log(rolesData);
-      setRoles(rolesData);
-    } catch (error) {
-      console.error("Error fetching employee roles:", error);
-    }
+    APIUserService.getQualifiedRoles(userId)
+      .then((response) => {
+        const rolesData = response.data;
+        setRoles(rolesData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const fetchCompany = async (userId) => {
+    APIUserService.getEmployeeCompany(userId)
+      .then((response) => {
+        const data = response.data;
+        setCompany(data.name);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
     <>
       <div>
-        <h2>Your roles in {props.company}</h2>
+        <h2>Your roles in {company}</h2>
         <ul>
           {roles.map((role, index) => (
             <li key={index}>{role.name}</li>

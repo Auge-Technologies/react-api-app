@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import profile_img from "../icons/manage_account.svg";
 import SearchRoles from "../components/SearchRoles";
-import useAuth from "../hooks/useAuth";
-import axios from "axios";
-import qs from "qs";
 import useUserId from "../hooks/useUserId";
+import My_roles from "../components/My_roles";
+import APIUserService from "../endpoints/APIUserService";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -23,15 +21,14 @@ const Dashboard = () => {
   }, [userId]);
 
   const fetchEmployeeGoals = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/employee/goals/${userId}`
-      );
-      const data = await response.json();
-      setEmployeeGoals(data);
-    } catch (error) {
-      console.log("Error fetching employee goals:", error);
-    }
+    APIUserService.getEmployeeGoals(userId)
+      .then((response) => {
+        const data = response.data;
+        setEmployeeGoals(data);
+      })
+      .catch((error) => {
+        console.log("Error fetching employee goals:", error);
+      });
   };
 
   const handleToggleSkills = async (goalId) => {
@@ -48,16 +45,16 @@ const Dashboard = () => {
     });
   };
 
-  const handleGetMissingSkills = async (employeeId, roleId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8080/employee/skillsMissingFromRole/${employeeId}/${roleId}`
-      );
-      const data = await response.json();
-      setMissingSkills(data);
-    } catch (error) {
-      console.log("Error fetching missing skills:", error);
-    }
+  const handleGetMissingSkills = async (roleId) => {
+    APIUserService.getEmployeeMissingSkills(userId, roleId)
+      .then((response) => {
+        const data = response.data;
+        console.log(data);
+        setMissingSkills(data);
+      })
+      .catch((error) => {
+        console.log("Error fetching missing skills:", error);
+      });
   };
 
   const calculateRolePercentageFulfilled = (goalId) => {
@@ -91,7 +88,7 @@ const Dashboard = () => {
               <button
                 onClick={() => {
                   handleToggleSkills(goal.id);
-                  handleGetMissingSkills(userId, goal.id);
+                  handleGetMissingSkills(goal.id);
                 }}
               >
                 {goal.showSkills ? "Hide Details" : "Show Details"}
@@ -126,6 +123,7 @@ const Dashboard = () => {
         <p>No employee goals found.</p>
       )}
       <SearchRoles update={fetchEmployeeGoals} />
+      <My_roles />
     </div>
   );
 };

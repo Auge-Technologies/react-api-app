@@ -9,14 +9,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/*<ul>
-                     ...your existing navigation links...
-                    <li>
-                        <Link to="/about">Admin</Link>
-                    </li>
-                </ul>*/}
-
-        {/* Define the routes */}
         <Routes>
           {<Route path="/" element={<Home />} />}
           <Route path="/dashboard" element={<Dashboard />} />

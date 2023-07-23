@@ -5,7 +5,6 @@ const Known_skills = (props) => {
 
   useEffect(() => {
     setKnownSkills(props.knownSkills);
-    console.log(knownSkills);
   }, [props.knownSkills]);
 
   return (

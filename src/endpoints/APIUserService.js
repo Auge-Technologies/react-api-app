@@ -1,42 +1,76 @@
-import axios from 'axios';
+import axios from "axios";
 
 const BACKEND_URL = "http://localhost:8080";
 
 class APIUserService {
-    getEmployeesInCompany(companyId) {
-        return axios.get(BACKEND_URL + "/employees/" + companyId);
-    }
+  getEmployeesInCompany(companyId) {
+    return axios.get(BACKEND_URL + "/employees/" + companyId);
+  }
 
-    getEmployeeSkills(employeeId) {
-        return axios.get(BACKEND_URL + "/employee/skills/" + employeeId);
-    }
+  getEmployeeSkills(employeeId) {
+    return axios.get(BACKEND_URL + "/employee/skills/" + employeeId);
+  }
 
-    setEmployeeAdmin(employeeId, isAdmin) {
-        return axios.put(BACKEND_URL + "/employee/setAdmin/" + employeeId + "/" + isAdmin);
-    }
+  getEmployeeCompany(employeeId) {
+    return axios.get(BACKEND_URL + "/employee/getCompany/" + employeeId);
+  }
 
-    getEmployeeCompany(employeeId) {
-        return axios.get(BACKEND_URL + "/employee/getCompany/" + employeeId);
-    }
+  getQualifiedRoles(employeeId) {
+    return axios.get(BACKEND_URL + "/employee/qualifiedRoles/" + employeeId);
+  }
 
-    getEmployee(employeeId) {
-        return axios.get(BACKEND_URL + "/employee/id/" + employeeId);
-    }
+  getEmployeeGoals(employeeId) {
+    return axios.get(BACKEND_URL + "/employee/goals/" + employeeId);
+  }
 
-    getRelatedSkillsByEmployee(employeeId) {
-        return axios.get(BACKEND_URL + "/employee/related/skills/" + employeeId);
-    }
+  getEmployee(employeeId) {
+    return axios.get(BACKEND_URL + "/employee/id/" + employeeId);
+  }
 
-    getRelatedSkills(skillIds) {
-        return axios.get(BACKEND_URL + "/skill/related/" + skillIds)
-    }
+  getEmployeeMissingSkills(employeeId, roleId) {
+    return axios.get(
+      BACKEND_URL +
+        "/employee/skillsMissingFromRole/" +
+        employeeId +
+        "/" +
+        roleId
+    );
+  }
 
-    getSKillsBySearch(searchString, limit) {
-        return axios.get(BACKEND_URL + "/skill/search/" + searchString + "/" + limit);
-    }
+  getRelatedSkillsByEmployee(employeeId) {
+    return axios.get(BACKEND_URL + "/employee/related/skills/" + employeeId);
+  }
 
-    addSkillToEmployee(employeeId, skillId, skillName) {
-        return axios.put(BACKEND_URL + "/employee/add/skill/" + employeeId + "/" + skillId + "/" + skillName);
-    }
+  getRelatedSkills(skillIds) {
+    return axios.get(BACKEND_URL + "/skill/related/" + skillIds);
+  }
+
+  getSKillsBySearch(searchString, limit) {
+    return axios.get(
+      BACKEND_URL + "/skill/search/" + searchString + "/" + limit
+    );
+  }
+
+  setEmployeeAdmin(employeeId, isAdmin) {
+    return axios.put(
+      BACKEND_URL + "/employee/setAdmin/" + employeeId + "/" + isAdmin
+    );
+  }
+
+  setUserInDatabase(employeeId) {
+    return axios.put(BACKEND_URL + "/add/employee/" + employeeId);
+  }
+
+  addSkillToEmployee(employeeId, skillId, skillName) {
+    return axios.put(
+      BACKEND_URL +
+        "/employee/add/skill/" +
+        employeeId +
+        "/" +
+        skillId +
+        "/" +
+        skillName
+    );
+  }
 }
 export default new APIUserService();

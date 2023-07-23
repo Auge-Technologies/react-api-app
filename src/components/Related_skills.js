@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import qs from "qs";
+import React, { useState } from "react";
 import APIUserService from "../endpoints/APIUserService";
 
 const Related_skills = (props) => {
@@ -12,13 +10,15 @@ const Related_skills = (props) => {
   const getRelatedSkills = async (skills, setSkills) => {
     setIsLoading(true);
     if (skills.length > 0) {
-      APIUserService.getRelatedSkills(skills.map((skill) => skill.id)).then(response => {
-        const relatedSkillsData = response.data;
-        setSkills(relatedSkillsData);
-        setIsLoading(false);
-      }).catch(error => {
-        console.log(error);
-      })
+      APIUserService.getRelatedSkills(skills.map((skill) => skill.id))
+        .then((response) => {
+          const relatedSkillsData = response.data;
+          setSkills(relatedSkillsData);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 

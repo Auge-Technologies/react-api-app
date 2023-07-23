@@ -1,25 +1,15 @@
-import { useEffect, useState } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useState } from "react";
 import axios from "axios";
 import qs from "qs";
+import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const SearchRoles = (props) => {
   const [searchedRole, setSearchedRole] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { isAuthenticated, user } = useAuth0();
-  const [userId, setUserId] = useState();
+  const { userId } = useAuth();
   const [buttonClicked, setButtonClicked] = useState(false);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (user) {
-      let parts = user.sub.split("|");
-      let numberString = parts[1];
-      setUserId(numberString);
-    }
-  }, [user]);
 
   const searchRoles = async (searchQuery) => {
     try {

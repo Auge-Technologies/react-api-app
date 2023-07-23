@@ -3,11 +3,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import useAuth from "../hooks/useAuth";
+import useUserId from "../hooks/useUserId";
 
 const Home = () => {
   const { loginWithRedirect } = useAuth0();
   const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
+  const { userId } = useUserId();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -25,24 +27,16 @@ const Home = () => {
   };
 
   const employeeExistsInDatabase = async () => {
-    let input = user.sub;
-    let numberString
-    let parts = input.split("|");
-    if (parts.length === 1) {
-      numberString = parts[0];
-    } else if (parts.length === 2) {
-      numberString = parts[1];
-    }
     try {
       const response = await axios.get(
-        `http://localhost:8080/employee/id/${numberString}`
+        `http://localhost:8080/employee/id/${userId}`
       );
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 500) {
         try {
           const params = new URLSearchParams();
-          params.append("employeeId", numberString);
+          params.append("employeeId", userId);
           params.append("name", user.nickname);
           params.append("email", user.email);
           params.append("companyId", "1");

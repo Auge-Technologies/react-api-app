@@ -25,10 +25,6 @@ const useAuth = () => {
   }, []);
 
   useEffect(() => {
-    console.log("saved user", user);
-  }, [user]);
-
-  useEffect(() => {
     // If the Auth0 isAuthenticated state changes, update the local state and the cookies
     if (auth0IsAuthenticated) {
       Cookies.set("user", JSON.stringify(auth0User));

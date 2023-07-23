@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import My_roles from "../components/My_roles";
 import Known_skills from "../components/Known_skills";
-import axios from "axios";
 import Related_skills from "../components/Related_skills";
 import Search_skills from "../components/Search_skills";
 import { useNavigate } from "react-router-dom";
@@ -14,14 +12,13 @@ const Profile = () => {
   const navigate = useNavigate();
   const [knownSkills, setKnownSkills] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { userId } = useUserId();
+  const { userId, isAdmin } = useUserId();
   const [company, setCompany] = useState("Auge");
-  const [isAdmin, setIsAdmin] = useState(true);
 
   useEffect(() => {
     findKnownSkills();
     findCompany();
-  }, [userId]);
+  }, [userId, isAdmin]);
 
   const findKnownSkills = async () => {
     APIUserService.getEmployeeSkills(userId)

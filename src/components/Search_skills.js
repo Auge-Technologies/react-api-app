@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import qs from "qs";
+import React, { useState } from "react";
 import APIUserService from "../endpoints/APIUserService";
 
 const Search_skills = (props) => {
@@ -10,16 +8,17 @@ const Search_skills = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const SearchSkills = async (searchQuery) => {
-
-    APIUserService.getSKillsBySearch(searchQuery, 10).then(response => {
-      const searchedSkillsData = response.data;
-      setSkillObjects(searchedSkillsData);
-      const searchedSkills = searchedSkillsData.map((skill) => skill.name);
-      setSearchedSkills(searchedSkills);
-      setIsLoading(false);
-    }).catch(error => {
-      console.log(error);
-    })
+    APIUserService.getSKillsBySearch(searchQuery, 10)
+      .then((response) => {
+        const searchedSkillsData = response.data;
+        setSkillObjects(searchedSkillsData);
+        const searchedSkills = searchedSkillsData.map((skill) => skill.name);
+        setSearchedSkills(searchedSkills);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleSearch = (searchQuery) => {
@@ -34,11 +33,13 @@ const Search_skills = (props) => {
   const handleKnowSkill = async (skillObject) => {
     const employeeId = props.userId;
     const { id, name } = skillObject;
-    APIUserService.addSkillToEmployee(employeeId, id, name).then(() => {
-      props.updateSkills();
-    }).catch(error => {
-      console.log(error);
-    })
+    APIUserService.addSkillToEmployee(employeeId, id, name)
+      .then(() => {
+        props.updateSkills();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
